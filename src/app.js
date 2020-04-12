@@ -5,11 +5,11 @@ const app = express(); app.listen(3001, () => {
     console.log("Server running on port 3001");
 });
 
-app.get("/id:seed", (req, res, next) => {
-    const seed = parseInt(req.params.seed);
-    console.log(typeof (seed))
+app.get("/game", (req, res, next) => {
+    const seed = parseInt(req.query.id);
     const tilesRemaining = req.query.rem;
     const tilesRequested = req.query.tiles;
+
     console.log(seed, tilesRemaining, tilesRequested);
 
     const bag = tilebag.shuffleBag(seed);
