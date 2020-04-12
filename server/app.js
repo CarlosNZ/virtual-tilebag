@@ -1,4 +1,4 @@
-const tilebag = require('./tilebag');
+const tilebag = require('./functions/tilebag');
 
 const express = require("express");
 const app = express(); app.listen(3001, () => {
