@@ -1,48 +1,67 @@
 import React, { useState } from "react";
+import * as FirestoreDb from "../services/firebase";
+import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-export const PlayerNameInput = (props) => {
+const PlayerNameInput = (props) => {
   return (
     <p>
       <label>Player {props.playerNum} name: </label>
-      <input type="text" name="playerName" />
+      <input
+        type="text"
+        name="playerName"
+        onChange={(e) => (props.playerNames[props.playerNum - 1] = e.target.value)}
+      />
     </p>
   );
 };
 
 export const NewGame = () => {
   const [playerNum, setPlayerNum] = useState(2);
-
-  const updatePlayerNumber = (e) => {
-    setPlayerNum(e.target.value);
-  };
+  const [playerNames, setPlayerNames] = useState(["", "", "", ""]);
+  let history = useHistory();
 
   const createPlayerInputFields = (num) => {
     let playerArray = [];
     for (let i = 1; i <= num; i++) {
-      playerArray.push(<PlayerNameInput key={i} playerNum={i} />);
+      playerArray.push(<PlayerNameInput key={i} playerNum={i} playerNames={playerNames} />);
     }
     return playerArray;
   };
 
-  const createGame = (e) => {
+  const initGame = (e) => {
+    let gameId = "";
     e.preventDefault();
-    console.log(e.target);
+
+    // Build players object from array of player names
+    const players = {};
+    playerNames.filter((p) => p != "").map((p, index) => (players["p" + (index + 1)] = p));
+
+    // Create game in Database and go to game URL
+    FirestoreDb.createGame(players)
+      .then((docRef) => {
+        console.log(docRef.id);
+        gameId = docRef.id;
+      })
+      .then(() => {
+        history.push("/game/id:" + gameId + "/p1");
+      });
   };
 
   return (
     <div>
       <h3>Create a new game</h3>
-      <form onSubmit={createGame}>
+      <form onSubmit={initGame}>
         <p>
           <label>How many players? </label>
-          <select name="playerNum" value={playerNum} onChange={updatePlayerNumber}>
+          <select name="playerNum" value={playerNum} onChange={(e) => setPlayerNum(e.target.value)}>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
           </select>
         </p>
         {createPlayerInputFields(playerNum)}
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Create game" />
       </form>
     </div>
   );
