@@ -3,6 +3,7 @@ import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import { shuffleBag, drawFromBag } from "./tilebag";
 import { NewGame } from "./components/NewGame";
+import { Game } from "./components/Game";
 import * as FirestoreDb from "./services/firebase";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
         <Link to="/users">Users</Link>
         <Route exact path="/" component={Home} />
         <Route exact path="/new-game" component={NewGame} />
-        {/* <Route exact path="/game/id:gameID/p:player" component={Game} /> */}
+        <Route exact path="/game/id:gameID/p:player" component={Game} />
       </Router>
     </section>
   );

@@ -28,7 +28,7 @@ export const db = firebase.firestore();
 export const createGame = (players) => {
   return db.collection("games").add({
     "current-turn": "p1",
-    players: { players },
+    players: players,
     "tiles-left": 100,
   });
 };
