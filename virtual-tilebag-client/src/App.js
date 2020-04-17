@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import { shuffleBag, drawFromBag } from "./tilebag";
-import { NewGame } from "./NewGame";
+import { NewGame } from "./components/NewGame";
+import * as FirestoreDb from "./services/firebase";
 
-const App = () => {
+function App() {
   return (
     <section className="App">
       <Router>
@@ -17,10 +18,21 @@ const App = () => {
       </Router>
     </section>
   );
-};
+}
 
-const Home = () => {
+function Home() {
+  return <NewGame />;
+}
+
+const TEMP = () => {
   const bag = shuffleBag(1234);
+  FirestoreDb.createGame({
+    p1: "Carl",
+    p2: "Bodhi",
+  }).then((docRef) => {
+    console.log(docRef.id);
+  });
+  // console.log(x);
 
   return (
     <div>
