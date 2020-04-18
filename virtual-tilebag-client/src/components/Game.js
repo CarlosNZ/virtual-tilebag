@@ -12,7 +12,7 @@ export const Game = (props) => {
   // State values
   const [currentPlayer, setCurrentPlayer] = useState();
   const [tilesRemaning, setTilesRemaining] = useState(100);
-  const [rack, setRack] = useState([]);
+  const [rack, setRack] = useState(["A", "B", "C"]);
   const [tilesSelected, setTilesSelected] = useState([]);
 
   FirestoreDb.getGame(gameId).then((doc) => {
@@ -23,12 +23,51 @@ export const Game = (props) => {
 
   const getNewTiles = (currentRackIndices) => {
     const newTiles = drawFromBag(tileBag, tilesRemaning, currentRackIndices.length);
-    const currentRack = [...rack];
+    const newRack = [...rack];
     currentRackIndices.map((i) => {
-      currentRack[i] = newTiles[i];
+      newRack[i] = newTiles[i];
     });
     setTilesRemaining(tilesRemaning - newTiles.length);
+    setRack(newRack);
   };
 
-  return <p>Nothing to see here yet</p>;
+  return <Rack rack={rack} />;
 };
+
+const Rack = (props) => {
+  const rackSelectedIndices = new Set();
+
+  const toggleLetterSelected = (letterIndex) => {
+    if (rackSelectedIndices.has(letterIndex)) {
+      rackSelectedIndices.delete(letterIndex);
+    } else rackSelectedIndices.add(letterIndex);
+    console.log(rackSelectedIndices);
+  };
+
+  const updateRack = () => {
+    console.log("Clicked");
+  };
+
+  return (
+    <div>
+      <p id="rack">
+        {props.rack.map((letter, index) => {
+          console.log(rackSelectedIndices.has(index));
+          return (
+            <span
+              key={index}
+              className={rackSelectedIndices.has(index) ? "red" : ""}
+              onClick={() => toggleLetterSelected(index)}
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </p>
+      {/* <div id="rack">{props.rack}</div> */}
+      <button onClick={updateRack}>Update Letters</button>
+    </div>
+  );
+};
+
+const Letter = (props) => {};

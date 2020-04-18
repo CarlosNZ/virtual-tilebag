@@ -10,6 +10,7 @@ function App() {
   return (
     <section className="App">
       <Router>
+        {/* <TEMP /> */}
         <Route exact path="/" component={Home} />
         <Route exact path="/new-game" component={NewGame} />
         <Route exact path="/game/id-:gameID/p:player" component={Game} />
@@ -24,18 +25,15 @@ function Home() {
 
 const TEMP = () => {
   const bag = shuffleBag(1234);
-  FirestoreDb.createGame({
-    p1: "Carl",
-    p2: "Bodhi",
-  }).then((docRef) => {
-    console.log(docRef.id);
-  });
-  // console.log(x);
+  const letters = drawFromBag(bag, 100, 7);
 
   return (
     <div>
+      {letters.map((letter) => {
+        return <p>letter</p>;
+      })}
       <h3>Home Page</h3>
-      <p>{drawFromBag(bag, 100, 7)}</p>
+      <p>{letters}</p>
     </div>
   );
 };
