@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import * as FirestoreDb from "../services/firebase";
-import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const PlayerNameInput = (props) => {
@@ -34,17 +33,18 @@ export const NewGame = () => {
     e.preventDefault();
 
     // Build players object from array of player names
-    const players = {};
-    playerNames.filter((p) => p != "").map((p, index) => (players["p" + (index + 1)] = p));
+    // const players = {};
+    // playerNames.filter((p) => p != "").map((p, index) => (players["p" + (index + 1)] = p));
 
     // Create game in Database and go to game URL
-    FirestoreDb.createGame(players)
+    FirestoreDb.createGame(playerNames.filter((p) => p != ""))
       .then((docRef) => {
         console.log(docRef.id);
         gameId = docRef.id;
       })
       .then(() => {
-        history.push("/game/id:" + gameId + "/p1");
+        history.push("/game/id-" + gameId + "/p1");
+        //TO DO : Add error/fail option (.catch?)
       });
   };
 
