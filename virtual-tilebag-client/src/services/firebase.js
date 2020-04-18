@@ -27,8 +27,22 @@ export const db = firebase.firestore();
 
 export const createGame = (players) => {
   return db.collection("games").add({
-    "current-turn": "p1",
+    "current-turn": 1,
     players: players,
     "tiles-left": 100,
   });
+};
+
+export const getGame = (gameId) => {
+  return db.collection("games").doc(gameId).get();
+};
+
+export const refreshGame = (gameId) => {
+  return db
+    .collection("games")
+    .doc(gameId)
+    .onSnapshot((doc) => {
+      console.log("Woop! Real-time update");
+      console.log(doc.data());
+    });
 };
