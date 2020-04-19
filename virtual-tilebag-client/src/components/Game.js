@@ -4,14 +4,16 @@ import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 import { shuffleBag, drawFromBag } from "../services/tilebag";
 
 export const Game = (props) => {
-  let numOfPlayers = 0;
-
   // Game constants
   const gameId = props.match.params.gameID;
   const thisPlayer = props.match.params.player;
   const tileBag = shuffleBag(gameId);
-  // const numOfPlayers = 2; // UPDATE THIS FROM DATABASE
+  const numOfPlayers = 2; // UPDATE THIS FROM DATABASE
 
+  return <Rack gameId={gameId} thisPlayer={thisPlayer} tileBag={tileBag} numOfPlayers={numOfPlayers} />;
+};
+
+const Rack = (props) => {
   // State values
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [tilesRemaning, setTilesRemaining] = useState(100);
@@ -20,24 +22,24 @@ export const Game = (props) => {
 
   useEffect(() => {
     // alert("This only happens once!");
-    FirestoreDb.getGame(gameId).then((doc) => {
+    FirestoreDb.getGame(props.gameId).then((doc) => {
       console.log(doc.data());
     });
   }, []);
 
-  FirestoreDb.syncGameState(gameId);
+  FirestoreDb.syncGameState(props.gameId);
 
   useEffect(() => {
     // console.log("Tiles remaining", tilesRemaning);
-    FirestoreDb.updateGame(gameId, tilesRemaning, currentPlayer);
+    FirestoreDb.updateGame(props.gameId, tilesRemaning, currentPlayer);
   }, [tilesRemaning, currentPlayer]);
 
-  FirestoreDb.getGame(gameId).then((doc) => {
+  FirestoreDb.getGame(props.gameId).then((doc) => {
     // console.log(doc.data());
   });
 
   const getNewTiles = (currentRackIndices) => {
-    const newTiles = drawFromBag(tileBag, tilesRemaning, currentRackIndices.length);
+    const newTiles = drawFromBag(props.tileBag, tilesRemaning, currentRackIndices.length);
     const newTileCount = newTiles.length;
     const newRack = [...rack];
     currentRackIndices.map((i) => {
@@ -46,7 +48,7 @@ export const Game = (props) => {
     setTilesRemaining(tilesRemaning - newTileCount);
     setRack(newRack);
     setRackSelectedIndices(new Set());
-    setCurrentPlayer((currentPlayer % numOfPlayers) + 1);
+    setCurrentPlayer((currentPlayer % props.numOfPlayers) + 1);
   };
 
   const toggleLetterSelected = (letterIndex) => {
@@ -76,7 +78,7 @@ export const Game = (props) => {
           );
         })}
       </div>
-      <button disabled={currentPlayer != thisPlayer} onClick={() => getNewTiles(Array.from(rackSelectedIndices))}>
+      <button disabled={currentPlayer != props.thisPlayer} onClick={() => getNewTiles(Array.from(rackSelectedIndices))}>
         Update Letters
       </button>
     </div>
