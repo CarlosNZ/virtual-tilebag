@@ -27,6 +27,7 @@ export const db = firebase.firestore();
 
 export const createGame = (players) => {
   return db.collection("games").add({
+    startTime: firebase.firestore.FieldValue.serverTimestamp(),
     currentPlayer: 1,
     players: players,
     tilesRemaining: 100,
