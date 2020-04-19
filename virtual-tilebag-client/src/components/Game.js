@@ -78,7 +78,7 @@ const Rack = (props) => {
         tilesRemaining: doc.data().tilesRemaining,
       });
       setPlayers(doc.data().players);
-      setRack(stringToRack(doc.data().racks[doc.data().currentPlayer - 1]));
+      setRack(stringToRack(doc.data().racks[props.thisPlayer - 1]));
       setHasGameStarted();
       console.log("Updating from database");
       // console.log(gameData);
