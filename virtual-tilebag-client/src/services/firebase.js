@@ -27,9 +27,9 @@ export const db = firebase.firestore();
 
 export const createGame = (players) => {
   return db.collection("games").add({
-    "current-player": 1,
+    currentPlayer: 1,
     players: players,
-    "tiles-remaining": 100,
+    tilesRemaining: 100,
   });
 };
 
@@ -39,7 +39,7 @@ export const getGame = (gameId) => {
 
 export const updateGame = (gameId, tilesRem, currentPlayer) => {
   // console.log(tilesRem);
-  return db.collection("games").doc(gameId).update({ "current-player": currentPlayer, "tiles-remaining": tilesRem });
+  return db.collection("games").doc(gameId).update({ currentPlayer: currentPlayer, tilesRemaining: tilesRem });
 };
 
 export const syncGameState = (gameId) => {

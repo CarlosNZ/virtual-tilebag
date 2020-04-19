@@ -8,9 +8,40 @@ export const Game = (props) => {
   const gameId = props.match.params.gameID;
   const thisPlayer = props.match.params.player;
   const tileBag = shuffleBag(gameId);
-  const numOfPlayers = 2; // UPDATE THIS FROM DATABASE
+  let numOfPlayers = 2; // UPDATE THIS FROM DATABASE
 
-  return <Rack gameId={gameId} thisPlayer={thisPlayer} tileBag={tileBag} numOfPlayers={numOfPlayers} />;
+  let tilesRemaining;
+  let currentPlayer;
+
+  const [gameLoaded, setGameLoaded] = useState(false);
+
+  FirestoreDb.getGame(gameId).then((doc) => {
+    console.log(doc.data());
+    setGameLoaded(true);
+    tilesRemaining = doc.data().tilesRemaining;
+    numOfPlayers = doc.data().players.length;
+    currentPlayer = doc.data().currentPlayer;
+    // alert("Loaded!");
+    console.log(tilesRemaining, numOfPlayers, currentPlayer);
+  });
+
+  return (
+    <div>
+      <h1>This will render first</h1>
+      {gameLoaded && (
+        <div>
+          <Rack
+            gameId={gameId}
+            thisPlayer={thisPlayer}
+            tileBag={tileBag}
+            numOfPlayers={numOfPlayers}
+            currentPlayer={currentPlayer}
+            tilesRemaining={tilesRemaining}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
 
 const Rack = (props) => {
@@ -20,12 +51,12 @@ const Rack = (props) => {
   const [rack, setRack] = useState(["A", "B", "C", "D", "E", "F", "G"]);
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
-  useEffect(() => {
-    // alert("This only happens once!");
-    FirestoreDb.getGame(props.gameId).then((doc) => {
-      console.log(doc.data());
-    });
-  }, []);
+  // useEffect(() => {
+  //   // alert("This only happens once!");
+  //   FirestoreDb.getGame(props.gameId).then((doc) => {
+  //     console.log(doc.data());
+  //   });
+  // }, []);
 
   FirestoreDb.syncGameState(props.gameId);
 
