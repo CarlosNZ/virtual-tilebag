@@ -28,8 +28,10 @@ export const db = firebase.firestore();
 export const createGame = (players) => {
   return db.collection("games").add({
     startTime: firebase.firestore.FieldValue.serverTimestamp(),
+    hasGameStarted: false,
     currentPlayer: 1,
     players: players,
+    racks: players.map((p) => ""),
     tilesRemaining: 100,
   });
 };
@@ -44,5 +46,6 @@ export const updateGame = (gameId, gameData) => {
 };
 
 export const syncGameState = (gameId, doc) => {
+  console.log("syncing...");
   return db.collection("games").doc(gameId).onSnapshot(doc);
 };
