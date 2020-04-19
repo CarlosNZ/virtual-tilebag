@@ -35,12 +35,14 @@ export const Game = (props) => {
 };
 
 const Rack = (props) => {
-  const rackSelectedIndices = new Set();
+  const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
   const toggleLetterSelected = (letterIndex) => {
-    if (rackSelectedIndices.has(letterIndex)) {
-      rackSelectedIndices.delete(letterIndex);
-    } else rackSelectedIndices.add(letterIndex);
+    const tempSet = new Set(rackSelectedIndices);
+    if (tempSet.has(letterIndex)) {
+      tempSet.delete(letterIndex);
+    } else tempSet.add(letterIndex);
+    setRackSelectedIndices(tempSet);
     console.log(rackSelectedIndices);
   };
 
@@ -64,10 +66,7 @@ const Rack = (props) => {
           );
         })}
       </p>
-      {/* <div id="rack">{props.rack}</div> */}
       <button onClick={updateRack}>Update Letters</button>
     </div>
   );
 };
-
-const Letter = (props) => {};
