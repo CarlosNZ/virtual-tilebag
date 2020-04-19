@@ -38,17 +38,11 @@ export const getGame = (gameId) => {
   return db.collection("games").doc(gameId).get();
 };
 
-export const updateGame = (gameId, tilesRem, currentPlayer) => {
+export const updateGame = (gameId, gameData) => {
   // console.log(tilesRem);
-  return db.collection("games").doc(gameId).update({ currentPlayer: currentPlayer, tilesRemaining: tilesRem });
+  return db.collection("games").doc(gameId).update(gameData);
 };
 
-export const syncGameState = (gameId) => {
-  return db
-    .collection("games")
-    .doc(gameId)
-    .onSnapshot((doc) => {
-      // console.log("Woop! Real-time update");
-      // console.log(doc.data());
-    });
+export const syncGameState = (gameId, doc) => {
+  return db.collection("games").doc(gameId).onSnapshot(doc);
 };
