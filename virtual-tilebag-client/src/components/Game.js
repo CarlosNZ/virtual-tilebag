@@ -1,40 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as FirestoreDb from "../services/firebase";
 import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 import { shuffleBag, drawFromBag } from "../services/tilebag";
 
 export const Game = (props) => {
+  let numOfPlayers = 0;
+
   // Game constants
   const gameId = props.match.params.gameID;
   const thisPlayer = props.match.params.player;
   const tileBag = shuffleBag(gameId);
+  // const numOfPlayers = 2; // UPDATE THIS FROM DATABASE
 
   // State values
-  const [currentPlayer, setCurrentPlayer] = useState();
+  const [currentPlayer, setCurrentPlayer] = useState(1);
   const [tilesRemaning, setTilesRemaining] = useState(100);
-  const [rack, setRack] = useState(["A", "B", "C"]);
-  const [tilesSelected, setTilesSelected] = useState([]);
+  const [rack, setRack] = useState(["A", "B", "C", "D", "E", "F", "G"]);
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
-  FirestoreDb.getGame(gameId).then((doc) => {
-    console.log(doc.data());
-  });
+  useEffect(() => {
+    // alert("This only happens once!");
+    FirestoreDb.getGame(gameId).then((doc) => {
+      console.log(doc.data());
+    });
+  }, []);
 
-  FirestoreDb.refreshGame(gameId);
+  FirestoreDb.syncGameState(gameId);
+
+  useEffect(() => {
+    // console.log("Tiles remaining", tilesRemaning);
+    FirestoreDb.updateGame(gameId, tilesRemaning, currentPlayer);
+  }, [tilesRemaning, currentPlayer]);
+
+  FirestoreDb.getGame(gameId).then((doc) => {
+    // console.log(doc.data());
+  });
 
   const getNewTiles = (currentRackIndices) => {
     const newTiles = drawFromBag(tileBag, tilesRemaning, currentRackIndices.length);
-    console.log("New Tiles", newTiles);
+    const newTileCount = newTiles.length;
     const newRack = [...rack];
-    console.log("New Rack", newRack);
-    console.log("Selected Indices", currentRackIndices);
     currentRackIndices.map((i) => {
       newRack[i] = newTiles.pop();
     });
-    console.log("CHanged Rack", newRack);
-    setTilesRemaining(tilesRemaning - newTiles.length);
+    setTilesRemaining(tilesRemaning - newTileCount);
     setRack(newRack);
     setRackSelectedIndices(new Set());
+    setCurrentPlayer((currentPlayer % numOfPlayers) + 1);
   };
 
   const toggleLetterSelected = (letterIndex) => {
@@ -43,16 +55,15 @@ export const Game = (props) => {
       tempSet.delete(letterIndex);
     } else tempSet.add(letterIndex);
     setRackSelectedIndices(tempSet);
-    console.log(rackSelectedIndices);
-  };
-
-  const updateRack = () => {
-    console.log("Clicked");
   };
 
   return (
     <div>
-      <p id="rack">
+      <div id="info">
+        <p>Current Player: {currentPlayer}</p>
+        <p>Tiles remaining: {tilesRemaning}</p>
+      </div>
+      <div id="rack">
         {rack.map((letter, index) => {
           return (
             <span
@@ -64,8 +75,10 @@ export const Game = (props) => {
             </span>
           );
         })}
-      </p>
-      <button onClick={() => getNewTiles(Array.from(rackSelectedIndices))}>Update Letters</button>
+      </div>
+      <button disabled={currentPlayer != thisPlayer} onClick={() => getNewTiles(Array.from(rackSelectedIndices))}>
+        Update Letters
+      </button>
     </div>
   );
 };
