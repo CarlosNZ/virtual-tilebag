@@ -14,6 +14,7 @@ export const Game = (props) => {
   const [tilesRemaning, setTilesRemaining] = useState(100);
   const [rack, setRack] = useState(["A", "B", "C"]);
   const [tilesSelected, setTilesSelected] = useState([]);
+  const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
   FirestoreDb.getGame(gameId).then((doc) => {
     console.log(doc.data());
@@ -23,19 +24,18 @@ export const Game = (props) => {
 
   const getNewTiles = (currentRackIndices) => {
     const newTiles = drawFromBag(tileBag, tilesRemaning, currentRackIndices.length);
+    console.log("New Tiles", newTiles);
     const newRack = [...rack];
+    console.log("New Rack", newRack);
+    console.log("Selected Indices", currentRackIndices);
     currentRackIndices.map((i) => {
-      newRack[i] = newTiles[i];
+      newRack[i] = newTiles.pop();
     });
+    console.log("CHanged Rack", newRack);
     setTilesRemaining(tilesRemaning - newTiles.length);
     setRack(newRack);
+    setRackSelectedIndices(new Set());
   };
-
-  return <Rack rack={rack} />;
-};
-
-const Rack = (props) => {
-  const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
   const toggleLetterSelected = (letterIndex) => {
     const tempSet = new Set(rackSelectedIndices);
@@ -53,8 +53,7 @@ const Rack = (props) => {
   return (
     <div>
       <p id="rack">
-        {props.rack.map((letter, index) => {
-          console.log(rackSelectedIndices.has(index));
+        {rack.map((letter, index) => {
           return (
             <span
               key={index}
@@ -66,7 +65,7 @@ const Rack = (props) => {
           );
         })}
       </p>
-      <button onClick={updateRack}>Update Letters</button>
+      <button onClick={() => getNewTiles(Array.from(rackSelectedIndices))}>Update Letters</button>
     </div>
   );
 };
