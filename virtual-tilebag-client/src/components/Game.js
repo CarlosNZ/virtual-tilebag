@@ -15,15 +15,19 @@ export const Game = (props) => {
 
   const [gameLoaded, setGameLoaded] = useState(false);
 
-  FirestoreDb.getGame(gameId).then((doc) => {
-    console.log(doc.data());
-    setGameLoaded(true);
-    tilesRemaining = doc.data().tilesRemaining;
-    numOfPlayers = doc.data().players.length;
-    currentPlayer = doc.data().currentPlayer;
-    // alert("Loaded!");
-    console.log(tilesRemaining, numOfPlayers, currentPlayer);
-  });
+  FirestoreDb.getGame(gameId)
+    .then((doc) => {
+      console.log(doc.data());
+      setGameLoaded(true);
+      tilesRemaining = doc.data().tilesRemaining;
+      numOfPlayers = doc.data().players.length;
+      currentPlayer = doc.data().currentPlayer;
+      // alert("Loaded!");
+      console.log(tilesRemaining, numOfPlayers, currentPlayer);
+    })
+    .catch(() => {
+      return <p>Game failed to load</p>;
+    });
 
   return (
     <div>
@@ -48,7 +52,7 @@ const Rack = (props) => {
   // State values
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [tilesRemaning, setTilesRemaining] = useState(100);
-  const [rack, setRack] = useState(["A", "B", "C", "D", "E", "F", "G"]);
+  const [rack, setRack] = useState([]);
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
 
   // useEffect(() => {
@@ -57,6 +61,14 @@ const Rack = (props) => {
   //     console.log(doc.data());
   //   });
   // }, []);
+
+  // Initialise rack if it's empty (i.e. starting new game)
+  useEffect(() => {
+    if (rack.length === 0) {
+      setRack(["", "", "", "", "", "", ""]);
+      getNewTiles([0, 1, 2, 3, 4, 5, 6]);
+    }
+  }, [rack]);
 
   FirestoreDb.syncGameState(props.gameId);
 
