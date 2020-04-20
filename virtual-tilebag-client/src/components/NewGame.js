@@ -17,7 +17,7 @@ const PlayerNameInput = (props) => {
 
 export const NewGame = () => {
   const [playerNum, setPlayerNum] = useState(2);
-  const [playerNames, setPlayerNames] = useState(["", "", "", ""]);
+  const playerNames = useState(["", "", "", ""]);
   let history = useHistory();
 
   const createPlayerInputFields = (num) => {
@@ -32,12 +32,8 @@ export const NewGame = () => {
     let gameId = "";
     e.preventDefault();
 
-    // Build players object from array of player names
-    // const players = {};
-    // playerNames.filter((p) => p != "").map((p, index) => (players["p" + (index + 1)] = p));
-
     // Create game in Database and go to game URL
-    FirestoreDb.createGame(playerNames.filter((p) => p != ""))
+    FirestoreDb.createGame(playerNames.filter((p) => p !== ""))
       .then((docRef) => {
         console.log(docRef.id);
         gameId = docRef.id;

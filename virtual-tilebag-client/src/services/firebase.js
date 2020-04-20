@@ -39,7 +39,7 @@ export const getGame = (gameId) => {
   return db.collection("games").doc(gameId).get();
 };
 
-export const updateDatabaseState = (gameId, field, newValue) => {
+export const updateState = (gameId, field, newValue) => {
   console.log("Updating database...");
   return db
     .collection("games")
