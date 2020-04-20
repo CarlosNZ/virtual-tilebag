@@ -37,6 +37,7 @@ const Rack = (props) => {
       console.log("Updating from database");
     });
     return unsubscribe;
+    // eslint-disable-next-line
   }, []);
 
   // Once all players have drawn initial tiles, game becomes ready
@@ -45,6 +46,7 @@ const Rack = (props) => {
       FirestoreDb.updateState(props.gameId, "currentPlayer", 1);
       console.log("Game is ready...");
     }
+    // eslint-disable-next-line
   }, [racks]);
 
   const rackStringToArray = (rackString) => {
@@ -59,6 +61,7 @@ const Rack = (props) => {
     const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, selectedTilesIndices.length);
     const newTileCount = newTiles.length;
     const newRack = rackStringToArray(racks[props.thisPlayer - 1]);
+    // eslint-disable-next-line
     selectedTilesIndices.map(function (i) {
       newRack[i] = newTiles.pop();
     });
@@ -86,30 +89,64 @@ const Rack = (props) => {
   const canUpdate =
     gameData.currentPlayer === props.thisPlayer || (gameData.currentPlayer === 0 && racks[props.thisPlayer - 1] === "");
 
+  const getInfoBarClass = {
+    waiting: "waiting-bg",
+    myTurn: "my-turn-bg",
+    othersTurn: "other-turn-bg",
+  };
+
+  const gameStatus = () =>
+    gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
+
   return (
-    <div>
-      <div id="info">
+    <main>
+      <div id="info-bar" className={getInfoBarClass[gameStatus()]}>
         <p>
-          Current Player: {players[gameData.currentPlayer - 1]} (Player {gameData.currentPlayer} of {players.length})
+          Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
         </p>
-        <p>Tiles remaining: {gameData.tilesRemaining}</p>
+        <p>
+          {gameStatus() === "waiting"
+            ? "Waiting to start..."
+            : gameStatus() === "myTurn"
+            ? "Your turn"
+            : players[gameData.currentPlayer - 1] + "'s turn"}
+        </p>
       </div>
       <div id="rack">
         {rackStringToArray(racks[props.thisPlayer - 1]).map((letter, index) => {
           return (
-            <span
+            <Tile
               key={index}
-              className={rackSelectedIndices.has(index) ? "red" : ""}
+              selected={rackSelectedIndices.has(index)}
               onClick={() => toggleLetterSelected(index)}
-            >
-              {letter}
-            </span>
+              letter={letter}
+            />
           );
         })}
       </div>
       <button disabled={!canUpdate} onClick={getNewTiles}>
         Draw tiles from bag
       </button>
+      <div id="tiles-remaining">
+        <p>{gameData.tilesRemaining} tiles left in bag</p>
+      </div>
+      <div id="player-box">
+        {players.map((player, i) => {
+          return (
+            <p>
+              Player {i + 1}: {player}
+            </p>
+          );
+        })}
+      </div>
+    </main>
+  );
+};
+
+const Tile = (props) => {
+  return (
+    <div className="tile" onClick={props.onClick}>
+      <p className={props.selected ? "red" : ""}>{props.letter}</p>
     </div>
   );
 };
