@@ -40,9 +40,19 @@ export const getGame = (gameId) => {
   return db.collection("games").doc(gameId).get();
 };
 
-export const updateGame = (gameId, gameData) => {
-  // console.log(tilesRem);
-  return db.collection("games").doc(gameId).update(gameData);
+export const updateGame = (gameId, thisPlayer, gameData, rack, allRacks, hasGameStarted) => {
+  console.log("Updating database...");
+  if (gameData.currentPlayer && allRacks.length > 0) {
+    const racks = [...allRacks];
+    racks[thisPlayer - 1] = rack.join("");
+    return db.collection("games").doc(gameId).update({
+      currentPlayer: gameData.currentPlayer,
+      tilesRemaining: gameData.tilesRemaining,
+      racks: racks,
+      hasGameStarted: hasGameStarted,
+    });
+    // return db.collection("games").doc(gameId).update(gameData);
+  }
 };
 
 export const syncGameState = (gameId, doc) => {
