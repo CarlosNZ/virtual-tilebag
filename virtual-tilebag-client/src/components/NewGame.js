@@ -1,17 +1,34 @@
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import * as FirestoreDb from "../services/firebase";
 import { useHistory } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import { Typography, FormControl, InputLabel, Select, MenuItem, TextField, Grid } from "@material-ui/core";
 
 const PlayerNameInput = (props) => {
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(1),
+    },
+  }));
+
+  const classes = useStyles();
+
   return (
-    <p>
-      <label>Player {props.playerNum} name: </label>
-      <input
-        type="text"
-        name="playerName"
-        onChange={(e) => (props.playerNames[props.playerNum - 1] = e.target.value)}
-      />
-    </p>
+    <Grid item>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <TextField
+          id="outlined-basic"
+          label={"Player " + props.playerNum + " name"}
+          variant="outlined"
+          onChange={(e) => (props.playerNames[props.playerNum - 1] = e.target.value)}
+        />
+      </FormControl>
+    </Grid>
   );
 };
 
@@ -44,22 +61,51 @@ export const NewGame = () => {
       });
   };
 
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 200,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }));
+
+  const classes = useStyles();
+
   return (
-    <div>
-      <h3>Create a new game</h3>
-      <form onSubmit={initGame}>
-        <p>
-          <label>How many players? </label>
-          <select name="playerNum" value={playerNum} onChange={(e) => setPlayerNum(e.target.value)}>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </p>
+    <Grid container spacing={3} justify="center">
+      <Grid item xs={12}>
+        <Typography variant="h5" align="center">
+          Create a new game
+        </Typography>
+      </Grid>
+      <Grid item>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="how-many-players">How many players?</InputLabel>
+          <Select
+            labelId="how-many-players"
+            name="playerNum"
+            id="selectNum"
+            value={playerNum}
+            label="How many players?"
+            onChange={(e) => setPlayerNum(e.target.value)}
+          >
+            <MenuItem value={2}>2</MenuItem>
+            <MenuItem value={3}>3</MenuItem>
+            <MenuItem value={4}>4</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid container spacing={3} justify="center">
         {createPlayerInputFields(playerNum)}
-        <input type="submit" value="Create game" />
-      </form>
-    </div>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" color="primary" type="submit" value="Create game" onClick={initGame}>
+          Create game
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
