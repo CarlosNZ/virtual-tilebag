@@ -10,40 +10,18 @@ export const Game = (props) => {
   const gameId = props.match.params.gameID;
   const thisPlayer = props.match.params.player;
   const tileBag = shuffleBag(gameId);
-  let numOfPlayers = 2; // UPDATE THIS FROM DATABASE
 
   let tilesRemaining;
   let currentPlayer;
 
   const [gameLoaded, setGameLoaded] = useState(true);
 
-  // FirestoreDb.getGame(gameId)
-  //   .then((doc) => {
-  //     console.log(doc.data());
-  //     setGameLoaded(true);
-  //     tilesRemaining = doc.data().tilesRemaining;
-  //     numOfPlayers = doc.data().players.length;
-  //     currentPlayer = doc.data().currentPlayer;
-  //     // alert("Loaded!");
-  //     console.log(tilesRemaining, numOfPlayers, currentPlayer);
-  //   })
-  //   .catch(() => {
-  //     return <p>Game failed to load</p>;
-  //   });
-
   return (
     <div>
       <h1>This will render first</h1>
       {gameLoaded && (
         <div>
-          <Rack
-            gameId={gameId}
-            thisPlayer={thisPlayer}
-            tileBag={tileBag}
-            numOfPlayers={numOfPlayers}
-            currentPlayer={currentPlayer}
-            tilesRemaining={tilesRemaining}
-          />
+          <Rack gameId={gameId} thisPlayer={thisPlayer} tileBag={tileBag} />
         </div>
       )}
     </div>
@@ -53,22 +31,12 @@ export const Game = (props) => {
 const Rack = (props) => {
   console.log("Rack re-render");
   // State values
-  const [rack, setRack] = useState([]);
+  const [rack, setRack] = useState(["", "", "", "", "", "", ""]);
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
   const [gameData, setGameData] = useState({});
   const [players, setPlayers] = useState([]);
   const [hasGameStarted, setHasGameStarted] = useState();
-
-  // console.log(gameData);
-
-  // Initialise rack if it's empty (i.e. starting new game)
-  // useEffect(() => {
-  //   if (rack.length === 0) {
-  //     console.log("Initialising rack...");
-  //     // setRack(["", "", "", "", "", "", ""]);
-  //     getNewTiles([0, 1, 2, 3, 4, 5, 6]);
-  //   }
-  // }, [rack]);
+  const [allRacks, setAllRacks] = useState([]);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -79,7 +47,8 @@ const Rack = (props) => {
       });
       setPlayers(doc.data().players);
       setRack(stringToRack(doc.data().racks[props.thisPlayer - 1]));
-      setHasGameStarted();
+      setHasGameStarted(doc.data().hasGameStarted);
+      setAllRacks(doc.data().racks);
       console.log("Updating from database");
       // console.log(gameData);
     });
@@ -88,10 +57,15 @@ const Rack = (props) => {
 
   // Update Database on changes to Rack/Tile state
   useEffect(() => {
-    // console.log("Tiles remaining", tilesRemaining);
     console.log("Updating game in database...");
-    if (!gameData.init) FirestoreDb.updateGame(props.gameId, gameData);
+    console.log(allRacks);
+    FirestoreDb.updateGame(props.gameId, props.thisPlayer, gameData, rack, allRacks, hasGameStarted);
   }, [gameData]);
+
+  // Update hasGameStarted based on all players' rack state
+  useEffect(() => {
+    if (allRacks.filter((r) => r !== "").length === players.length) setHasGameStarted(true);
+  }, [allRacks]);
 
   const stringToRack = (rackString) => {
     const rackArray = ["", "", "", "", "", "", ""];
@@ -99,22 +73,21 @@ const Rack = (props) => {
     return rackArray;
   };
 
-  const getNewTiles = (currentRackIndices) => {
+  const getNewTiles = () => {
     // Exception for initial draw -- build array and don't advance player
-    let advancePlayer = true;
-    if (rack.length === 0) {
-      const advancePlayer = false;
-      setRack(["", "", "", "", "", "", ""]);
-    }
-    const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, currentRackIndices.length);
+
+    const selectedIndices = hasGameStarted ? Array.from(rackSelectedIndices) : [0, 1, 2, 3, 4, 5, 6];
+
+    const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, selectedIndices.length);
     const newTileCount = newTiles.length;
     const newRack = [...rack];
-    currentRackIndices.map((i) => {
+    selectedIndices.map((i) => {
       newRack[i] = newTiles.pop();
     });
+    // console.log(newRack);
     setRack(newRack);
     setRackSelectedIndices(new Set());
-    const newPlayer = advancePlayer ? (gameData.currentPlayer % props.numOfPlayers) + 1 : gameData.currentPlayer;
+    const newPlayer = hasGameStarted ? (gameData.currentPlayer % players.length) + 1 : gameData.currentPlayer;
     setGameData({
       ...gameData,
       tilesRemaining: gameData.tilesRemaining - newTileCount,
@@ -133,9 +106,8 @@ const Rack = (props) => {
   return (
     <div>
       <div id="info">
-        <p>Init: {gameData.init}</p>
         <p>
-          Current Player: {players[gameData.currentPlayer - 1]} (Player {gameData.currentPlayer})
+          Current Player: {players[gameData.currentPlayer - 1]} (Player {gameData.currentPlayer} of {players.length})
         </p>
         <p>Tiles remaining: {gameData.tilesRemaining}</p>
       </div>
@@ -152,10 +124,7 @@ const Rack = (props) => {
           );
         })}
       </div>
-      <button
-        disabled={gameData.currentPlayer != props.thisPlayer}
-        onClick={() => getNewTiles(Array.from(rackSelectedIndices))}
-      >
+      <button disabled={gameData.currentPlayer != props.thisPlayer && hasGameStarted} onClick={getNewTiles}>
         Update Letters
       </button>
     </div>
