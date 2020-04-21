@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import { NewGame } from "./components/NewGame";
 import { Game } from "./components/Game";
+import { Typography, Link } from "@material-ui/core";
 
 function App() {
   return (
@@ -24,7 +25,14 @@ function Home() {
 function Footer() {
   return (
     <footer>
-      <p>(c) 2020 Carl Smith</p>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link color="inherit" href="">
+          Carl Smith
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
     </footer>
   );
 }

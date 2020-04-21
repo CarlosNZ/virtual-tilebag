@@ -3,31 +3,47 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as FirestoreDb from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { Typography, FormControl, InputLabel, Select, MenuItem, TextField, Grid } from "@material-ui/core";
+import {
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Grid,
+  Container,
+  CssBaseline,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const PlayerNameInput = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(1),
-    },
-  }));
-
-  const classes = useStyles();
-
   return (
-    <Grid item>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <TextField
-          id="outlined-basic"
-          label={"Player " + props.playerNum + " name"}
-          variant="outlined"
-          onChange={(e) => (props.playerNames[props.playerNum - 1] = e.target.value)}
-        />
-      </FormControl>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        id="outlined-basic"
+        label={"Player " + props.playerNum + " name"}
+        variant="outlined"
+        onChange={(e) => (props.playerNames[props.playerNum - 1] = e.target.value)}
+      />
     </Grid>
   );
 };
@@ -61,51 +77,54 @@ export const NewGame = () => {
       });
   };
 
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 200,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }));
-
   const classes = useStyles();
 
   return (
-    <Grid container spacing={3} justify="center">
-      <Grid item xs={12}>
-        <Typography variant="h5" align="center">
-          Create a new game
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <div className="main-icon">
+          <img style={{ maxWidth: "100%" }} src="vt_icon.png" alt="main-icon" />
+        </div>
+        <Typography component="h1" variant="h5" align="center">
+          Start a new game
         </Typography>
-      </Grid>
-      <Grid item>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="how-many-players">How many players?</InputLabel>
-          <Select
-            labelId="how-many-players"
-            name="playerNum"
-            id="selectNum"
-            value={playerNum}
-            label="How many players?"
-            onChange={(e) => setPlayerNum(e.target.value)}
+        <form className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <FormControl fullWidth required>
+                <InputLabel id="how-many-players">How many players?</InputLabel>
+                <Select
+                  labelId="how-many-players"
+                  required
+                  name="playerNum"
+                  id="selectNum"
+                  value={playerNum}
+                  label="How many players?"
+                  onChange={(e) => setPlayerNum(e.target.value)}
+                >
+                  <MenuItem value={2}>2</MenuItem>
+                  <MenuItem value={3}>3</MenuItem>
+                  <MenuItem value={4}>4</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {createPlayerInputFields(playerNum)}
+          </Grid>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            className={classes.submit}
+            value="Create game"
+            onClick={initGame}
           >
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid container spacing={3} justify="center">
-        {createPlayerInputFields(playerNum)}
-      </Grid>
-      <Grid item>
-        <Button variant="contained" color="primary" type="submit" value="Create game" onClick={initGame}>
-          Create game
-        </Button>
-      </Grid>
-    </Grid>
+            Create game
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 };
 
