@@ -128,10 +128,6 @@ const Rack = (props) => {
 
   return (
     <Container component="main" maxWidth="sm">
-      <div className={classes.root}>
-        <Paper />
-        <Paper elevation={3} />
-      </div>
       <div id="info-bar" className={getInfoBarClass[gameStatus()]}>
         <p>
           Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
