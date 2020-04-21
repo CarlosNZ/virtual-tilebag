@@ -24,7 +24,7 @@ function Home() {
 
 function Footer() {
   return (
-    <footer>
+    <footer style={{ marginTop: 30 }}>
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
         <Link color="inherit" href="">
