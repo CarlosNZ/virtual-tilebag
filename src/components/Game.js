@@ -7,10 +7,6 @@ import PersonIcon from "@material-ui/icons/Person";
 import {
   Button,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Grid,
   Container,
   CssBaseline,
@@ -190,16 +186,18 @@ const Rack = (props) => {
         </Grid>
       </Grid>
       <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
-        {rackStringToArray(racks[props.thisPlayer - 1]).map((letter, index) => {
-          return (
-            <Tile
-              key={index}
-              selected={rackSelectedIndices.has(index)}
-              onClick={() => toggleLetterSelected(index)}
-              letter={letter}
-            />
-          );
-        })}
+        {rackStringToArray(racks[props.thisPlayer - 1])
+          .filter((letter) => letter !== "") // Don't show "empty" tiles
+          .map((letter, index) => {
+            return (
+              <Tile
+                key={index}
+                selected={rackSelectedIndices.has(index)}
+                onClick={() => toggleLetterSelected(index)}
+                letter={letter === "_" ? " " : letter} // Display blanks correctly
+              />
+            );
+          })}
       </Grid>
       <Grid id="info" container direction="column" alignItems="center">
         <div>

@@ -1,4 +1,3 @@
-// import { shuffle } from "knuth-shuffle-seeded"
 const shuffle = require("knuth-shuffle-seeded");
 
 // prettier-ignore
