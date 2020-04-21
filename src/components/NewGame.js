@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import * as FirestoreDb from "../services/firebase";
 import { useHistory } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import {
+  Button,
   Typography,
   FormControl,
   InputLabel,
@@ -13,18 +13,24 @@ import {
   Grid,
   Container,
   CssBaseline,
+  Paper,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    "& > *": {
+      margin: theme.spacing(1),
+      // width: theme.spacing(16),
+      // height: theme.spacing(16),
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -86,43 +92,45 @@ export const NewGame = () => {
         <div className="main-icon">
           <img style={{ maxWidth: "100%" }} src="vt_icon.png" alt="main-icon" />
         </div>
-        <Typography component="h1" variant="h5" align="center">
-          Start a new game
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <FormControl fullWidth required>
-                <InputLabel id="how-many-players">How many players?</InputLabel>
-                <Select
-                  labelId="how-many-players"
-                  required
-                  name="playerNum"
-                  id="selectNum"
-                  value={playerNum}
-                  label="How many players?"
-                  onChange={(e) => setPlayerNum(e.target.value)}
-                >
-                  <MenuItem value={2}>2</MenuItem>
-                  <MenuItem value={3}>3</MenuItem>
-                  <MenuItem value={4}>4</MenuItem>
-                </Select>
-              </FormControl>
+        <Paper className={classes.root}>
+          <Typography component="h1" variant="h5" align="center">
+            Start a new game
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel id="how-many-players">How many players?</InputLabel>
+                  <Select
+                    labelId="how-many-players"
+                    required
+                    name="playerNum"
+                    id="selectNum"
+                    value={playerNum}
+                    label="How many players?"
+                    onChange={(e) => setPlayerNum(e.target.value)}
+                  >
+                    <MenuItem value={2}>2</MenuItem>
+                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={4}>4</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {createPlayerInputFields(playerNum)}
             </Grid>
-            {createPlayerInputFields(playerNum)}
-          </Grid>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            fullWidth
-            className={classes.submit}
-            value="Create game"
-            onClick={initGame}
-          >
-            Create game
-          </Button>
-        </form>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              className={classes.submit}
+              value="Create game"
+              onClick={initGame}
+            >
+              Create game
+            </Button>
+          </form>
+        </Paper>
       </div>
     </Container>
   );

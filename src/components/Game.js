@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from "react";
 import * as FirestoreDb from "../services/firebase";
 import { shuffleBag, drawFromBag } from "../services/tilebag";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Button,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Grid,
+  Container,
+  CssBaseline,
+  Paper,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    "& > *": {
+      margin: theme.spacing(1),
+      width: theme.spacing(16),
+      height: theme.spacing(16),
+    },
+  },
+}));
 
 export const Game = (props) => {
+  const classes = useStyles();
   console.log("Game Re-render");
 
   // Game constants
@@ -18,6 +45,7 @@ export const Game = (props) => {
 };
 
 const Rack = (props) => {
+  const classes = useStyles();
   console.log("Rack re-render");
   // State values
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
@@ -99,7 +127,11 @@ const Rack = (props) => {
     gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
 
   return (
-    <main>
+    <Container component="main" maxWidth="sm">
+      <div className={classes.root}>
+        <Paper />
+        <Paper elevation={3} />
+      </div>
       <div id="info-bar" className={getInfoBarClass[gameStatus()]}>
         <p>
           Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
@@ -139,7 +171,7 @@ const Rack = (props) => {
           );
         })}
       </div>
-    </main>
+    </Container>
   );
 };
 
