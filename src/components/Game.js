@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import logo from "../img/vt_icon.png";
 import * as FirestoreDb from "../services/firebase";
-import { shuffleBag, drawFromBag } from "../services/tilebag";
+import { shuffleBag, drawFromBag, tilePointValues } from "../services/tilebag";
 import { makeStyles } from "@material-ui/core/styles";
+import PersonIcon from "@material-ui/icons/Person";
 import {
   Button,
   Typography,
@@ -9,11 +11,15 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  TextField,
   Grid,
   Container,
   CssBaseline,
   Paper,
+  Card,
+  CardContent,
+  CardActionArea,
+  Chip,
+  Divider,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +32,43 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
+  header: {
+    margin: theme.spacing(1),
+  },
+  infoCard: {
+    margin: theme.spacing(1),
+  },
+  myTurn: {
+    borderColor: "#hsla(115, 39%, 53%, 1)",
+    backgroundColor: "hsla(115, 39%, 53%, 0.15)",
+  },
+  othersTurn: {
+    borderColor: "hsla(38, 100%, 50%, 1.00)",
+    backgroundColor: "hsla(38, 100%, 50%, 0.15)",
+  },
+  waiting: {
+    borderColor: "hsla(8, 90%, 58%, 1.00)",
+    backgroundColor: "hsla(8, 90%, 58%, 0.15)",
+  },
+  rack: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+  },
+  tile: {
+    width: 40,
+    height: 40,
+    margin: theme.spacing(1),
+    border: "1px solid #DCDCDC",
+    backgroundColor: "#FFFDF0",
+  },
+  selectedTile: {
+    transform: "translateY(-15px)",
+    opacity: 0.7,
+  },
 }));
 
 export const Game = (props) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   console.log("Game Re-render");
 
   // Game constants
@@ -117,30 +156,40 @@ const Rack = (props) => {
   const canUpdate =
     gameData.currentPlayer === props.thisPlayer || (gameData.currentPlayer === 0 && racks[props.thisPlayer - 1] === "");
 
-  const getInfoBarClass = {
-    waiting: "waiting-bg",
-    myTurn: "my-turn-bg",
-    othersTurn: "other-turn-bg",
-  };
-
   const gameStatus = () =>
     gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
 
   return (
     <Container component="main" maxWidth="sm">
-      <div id="info-bar" className={getInfoBarClass[gameStatus()]}>
-        <p>
-          Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
-        </p>
-        <p>
-          {gameStatus() === "waiting"
-            ? "Waiting to start..."
-            : gameStatus() === "myTurn"
-            ? "Your turn"
-            : players[gameData.currentPlayer - 1] + "'s turn"}
-        </p>
-      </div>
-      <div id="rack">
+      <Grid id="header" container xs={12} direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" xs={6} alignItems="center" className={classes.header}>
+          <Grid item>
+            <img style={{ width: 30, marginRight: 10 }} src={logo} alt="main-icon" />
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" color="primary" gutterBottom="true">
+              virtual tilebag
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Card variant="outlined" className={classes.infoCard + " " + classes[gameStatus()]}>
+            <CardContent style={{ padding: 8 }}>
+              <Typography variant="body2" align="right">
+                {gameStatus() === "waiting"
+                  ? "Waiting to start..."
+                  : gameStatus() === "myTurn"
+                  ? "Your turn"
+                  : players[gameData.currentPlayer - 1] + "'s turn"}
+              </Typography>
+              <Typography variant="body2" align="right" style={{ fontSize: "0.75rem" }}>
+                Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
         {rackStringToArray(racks[props.thisPlayer - 1]).map((letter, index) => {
           return (
             <Tile
@@ -151,30 +200,66 @@ const Rack = (props) => {
             />
           );
         })}
-      </div>
-      <button disabled={!canUpdate} onClick={getNewTiles}>
-        Draw tiles from bag
-      </button>
-      <div id="tiles-remaining">
-        <p>{gameData.tilesRemaining} tiles left in bag</p>
-      </div>
-      <div id="player-box">
-        {players.map((player, i) => {
-          return (
-            <p>
-              Player {i + 1}: {player}
-            </p>
-          );
-        })}
-      </div>
+      </Grid>
+      <Grid id="info" container direction="column" alignItems="center">
+        <div>
+          <Button
+            variant="contained"
+            disabled={!canUpdate}
+            color="primary"
+            fullWidth="false"
+            style={{ marginBottom: 30 }}
+            onClick={getNewTiles}
+          >
+            Get new tiles from bag
+          </Button>
+        </div>
+        <Chip label={gameData.tilesRemaining + " tiles left in bag"} style={{ marginBottom: 30 }} variant="outlined" />
+        <Card id="player-box" style={{ padding: 15, paddingBottom: 0, backgroundColor: "GhostWhite" }}>
+          <CardContent>
+            <Typography variant="subtitle2" color="textSecondary" gutterBottom="true" style={{ marginLeft: 10 }}>
+              This game:
+            </Typography>
+            <Divider style={{ marginBottom: 10 }} />
+            {players.map((player, i) => {
+              return (
+                <Grid container alignItems="flex-end" style={{ marginTop: 20 }}>
+                  <PersonIcon style={{ marginLeft: -20 }} />
+                  <Typography
+                    variant="body2"
+                    color="textPrimary"
+                    style={{ marginLeft: 10, fontWeight: props.thisPlayer === i + 1 ? "bold" : "normal" }}
+                  >
+                    Player {i + 1}: {player}
+                  </Typography>
+                </Grid>
+              );
+            })}
+          </CardContent>
+        </Card>
+      </Grid>
     </Container>
   );
 };
 
 const Tile = (props) => {
+  const classes = useStyles();
   return (
-    <div className="tile" onClick={props.onClick}>
-      <p className={props.selected ? "red" : ""}>{props.letter}</p>
-    </div>
+    <Card
+      onClick={props.onClick}
+      className={classes.tile + " " + (props.selected ? classes.selectedTile : "")}
+      style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <CardActionArea>
+        <CardContent style={{ padding: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Typography variant="h4" style={{ fontSize: "2rem" }}>
+            {props.letter}
+          </Typography>
+        </CardContent>
+        {/* <Typography variant="body2" style={{ fontSize: "1rem" }}>
+          {tilePointValues[props.letter]}
+        </Typography> */}
+      </CardActionArea>
+    </Card>
   );
 };

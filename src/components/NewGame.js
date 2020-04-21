@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logo from "../img/vt_icon.png";
 import { makeStyles } from "@material-ui/core/styles";
 import * as FirestoreDb from "../services/firebase";
 import { useHistory } from "react-router-dom";
@@ -21,20 +22,20 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
     "& > *": {
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
       // width: theme.spacing(16),
       // height: theme.spacing(16),
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(5),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -88,14 +89,19 @@ export const NewGame = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+
       <div className={classes.paper}>
-        <div className="main-icon">
-          <img style={{ maxWidth: "100%" }} src="vt_icon.png" alt="main-icon" />
-        </div>
         <Paper className={classes.root}>
-          <Typography component="h1" variant="h5" align="center">
-            Start a new game
-          </Typography>
+          <Grid item xs={12} center>
+            <div id="main-icon" style={{ textAlign: "center" }}>
+              <img style={{ width: 80 }} src={logo} alt="main-icon" />
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography component="h1" variant="h5" align="center">
+              Start a new game
+            </Typography>
+          </Grid>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12}>
