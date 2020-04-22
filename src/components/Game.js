@@ -2,20 +2,25 @@ import React, { useState, useEffect } from "react";
 import logo from "../img/vt_icon.png";
 import * as FirestoreDb from "../services/firebase";
 import { shuffleBag, drawFromBag, tilePointValues } from "../services/tilebag";
+import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import {
   Button,
   Typography,
   Grid,
   Container,
   CssBaseline,
-  Paper,
   Card,
   CardContent,
   CardActionArea,
   Chip,
   Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0px 0px 3px 2px hsla(8, 90%, 58%, 0.15)",
   },
   rack: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(4),
   },
   tile: {
@@ -90,6 +95,7 @@ const Rack = (props) => {
   const [gameData, setGameData] = useState({});
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(true);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -158,10 +164,23 @@ const Rack = (props) => {
   const gameStatus = () =>
     gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
 
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <Container component="main" maxWidth="sm">
-      <Grid id="header" container xs={12} direction="row" justify="space-between" alignItems="center">
-        <Grid container direction="row" xs={6} alignItems="center" className={classes.header}>
+      <CssBaseline />
+      <Grid
+        id="header"
+        container
+        xs={12}
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        className={classes.header}
+      >
+        <Grid container direction="row" xs={6} alignItems="center">
           <Grid item>
             <img style={{ width: 30, marginRight: 10 }} src={logo} alt="main-icon" />
           </Grid>
@@ -202,15 +221,26 @@ const Rack = (props) => {
       <Grid id="info" container direction="column" alignItems="center">
         <div>
           {racks[props.thisPlayer - 1] !== "" && gameData.currentPlayer === 0 ? (
-            <Typography variant="body2" color="textSecondary" style={{ marginBottom: 30 }}>
-              Waiting to draw tiles:
-              <ul>
+            <Grid item>
+              <Typography variant="body2" color="textPrimary">
+                <em>Waiting for these players to draw tiles:</em>
+              </Typography>
+              <List color="textSecondary">
                 {racks.map((r, index) => {
-                  if (r === "") return <li>{players[index]}</li>;
+                  if (r === "")
+                    return (
+                      <ListItem style={{ padding: 0 }}>
+                        <ListItemIcon>
+                          <ChevronRightIcon />
+                        </ListItemIcon>
+                        <ListItemText secondary={players[index]} />
+                      </ListItem>
+                    );
                   else return "";
                 })}
-              </ul>
-            </Typography>
+              </List>
+              <Divider style={{ marginBottom: 20 }} />
+            </Grid>
           ) : (
             <Button
               variant="contained"
@@ -226,30 +256,44 @@ const Rack = (props) => {
             </Button>
           )}
         </div>
-        <Chip label={gameData.tilesRemaining + " tiles left in bag"} style={{ marginBottom: 30 }} variant="outlined" />
-        <Card id="player-box" style={{ padding: 15, paddingBottom: 0, backgroundColor: "GhostWhite" }}>
-          <CardContent>
-            <Typography variant="subtitle2" color="textSecondary" gutterBottom="true" style={{ marginLeft: 10 }}>
-              This game:
-            </Typography>
-            <Divider style={{ marginBottom: 10 }} />
-            {players.map((player, i) => {
-              return (
-                <Grid container alignItems="flex-end" style={{ marginTop: 20 }}>
-                  <PersonIcon style={{ marginLeft: -20 }} />
-                  <Typography
-                    variant="body2"
-                    color="textPrimary"
-                    style={{ marginLeft: 10, fontWeight: props.thisPlayer === i + 1 ? "bold" : "normal" }}
-                  >
-                    Player {i + 1}: {player}
-                  </Typography>
-                </Grid>
-              );
-            })}
+        <Chip
+          label={gameData.tilesRemaining + " tiles left in bag"}
+          color="primary"
+          style={{ marginBottom: 30 }}
+          variant="outlined"
+        />
+        <Card id="player-box">
+          <CardContent style={{ padding: 0 }}>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <PersonIcon fontSize="large" color="primary" />
+                </ListItemIcon>
+                <Typography variant="button" color="primary" style={{ fontSize: "1.2em" }}>
+                  Players
+                </Typography>
+                {/* <ListItemText primary="Players" /> */}
+              </ListItem>
+              <Divider />
+              {players.map((player, i) => {
+                return (
+                  <ListItem style={{ paddingLeft: 5 }}>
+                    <ChevronRightIcon style={{ opacity: i === gameData.currentPlayer ? 1 : 0 }} />
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      style={{ fontWeight: i === gameData.currentPlayer ? "bold" : "normal" }}
+                    >
+                      Player {i + 1}: {player}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
+            </List>
           </CardContent>
         </Card>
       </Grid>
+      <Modal open={dialogOpen} handleClose={handleClose} players={players} gameId={props.gameId} />
     </Container>
   );
 };
