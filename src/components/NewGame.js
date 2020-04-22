@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     "& > *": {
       margin: theme.spacing(2),
-      // width: theme.spacing(16),
-      // height: theme.spacing(16),
     },
   },
   paper: {
@@ -89,7 +87,6 @@ export const NewGame = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-
       <div className={classes.paper}>
         <Paper className={classes.root}>
           <Grid item xs={12} center>
