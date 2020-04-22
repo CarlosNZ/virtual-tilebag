@@ -31,20 +31,23 @@ const useStyles = makeStyles((theme) => ({
   header: {
     margin: theme.spacing(1),
   },
-  infoCard: {
+  turnIndicator: {
     margin: theme.spacing(1),
   },
   myTurn: {
     borderColor: "#hsla(115, 39%, 53%, 1)",
     backgroundColor: "hsla(115, 39%, 53%, 0.15)",
+    boxShadow: "0px 0px 3px 2px hsla(115, 39%, 53%, 0.25)",
   },
   othersTurn: {
     borderColor: "hsla(38, 100%, 50%, 1.00)",
     backgroundColor: "hsla(38, 100%, 50%, 0.15)",
+    boxShadow: "0px 0px 3px 2px hsla(38, 100%, 50%, 0.15)",
   },
   waiting: {
     borderColor: "hsla(8, 90%, 58%, 1.00)",
     backgroundColor: "hsla(8, 90%, 58%, 0.15)",
+    boxShadow: "0px 0px 3px 2px hsla(8, 90%, 58%, 0.15)",
   },
   rack: {
     marginTop: theme.spacing(4),
@@ -169,20 +172,17 @@ const Rack = (props) => {
           </Grid>
         </Grid>
         <Grid item>
-          <Card variant="outlined" className={classes.infoCard + " " + classes[gameStatus()]}>
-            <CardContent style={{ padding: 8 }}>
-              <Typography variant="body2" align="right">
-                {gameStatus() === "waiting"
-                  ? "Waiting to start..."
-                  : gameStatus() === "myTurn"
-                  ? "Your turn"
-                  : players[gameData.currentPlayer - 1] + "'s turn"}
-              </Typography>
-              <Typography variant="body2" align="right" style={{ fontSize: "0.75rem" }}>
-                Player {props.thisPlayer}: {players[[props.thisPlayer] - 1]}
-              </Typography>
-            </CardContent>
-          </Card>
+          <Chip
+            variant="outlined"
+            label={
+              gameStatus() === "waiting"
+                ? "Waiting to start..."
+                : gameStatus() === "myTurn"
+                ? "Your turn"
+                : players[gameData.currentPlayer - 1] + "'s turn"
+            }
+            className={classes.turnIndicator + " " + classes[gameStatus()]}
+          />
         </Grid>
       </Grid>
       <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
@@ -201,16 +201,30 @@ const Rack = (props) => {
       </Grid>
       <Grid id="info" container direction="column" alignItems="center">
         <div>
-          <Button
-            variant="contained"
-            disabled={!canUpdate}
-            color="primary"
-            fullWidth="false"
-            style={{ marginBottom: 30 }}
-            onClick={getNewTiles}
-          >
-            Get new tiles from bag
-          </Button>
+          {racks[props.thisPlayer - 1] !== "" && gameData.currentPlayer === 0 ? (
+            <Typography variant="body2" color="textSecondary" style={{ marginBottom: 30 }}>
+              Waiting to draw tiles:
+              <ul>
+                {racks.map((r, index) => {
+                  if (r === "") return <li>{players[index]}</li>;
+                  else return "";
+                })}
+              </ul>
+            </Typography>
+          ) : (
+            <Button
+              variant="contained"
+              disabled={!canUpdate}
+              color="primary"
+              fullWidth="false"
+              style={{ marginBottom: 30 }}
+              onClick={getNewTiles}
+            >
+              {racks[props.thisPlayer - 1] === "" && gameData.currentPlayer === 0
+                ? "Get tiles from bag"
+                : "Get new tiles from bag"}
+            </Button>
+          )}
         </div>
         <Chip label={gameData.tilesRemaining + " tiles left in bag"} style={{ marginBottom: 30 }} variant="outlined" />
         <Card id="player-box" style={{ padding: 15, paddingBottom: 0, backgroundColor: "GhostWhite" }}>
