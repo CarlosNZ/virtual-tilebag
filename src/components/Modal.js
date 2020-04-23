@@ -28,7 +28,7 @@ export const Modal = (props) => {
           {players.map((player, index) => {
             return (
               <>
-                <ListItem style={{ flexDirection: "column", alignItems: "flex-start" }}>
+                <ListItem key={index} style={{ flexDirection: "column", alignItems: "flex-start" }}>
                   <Typography>
                     Player {index + 1}: {player}
                   </Typography>
