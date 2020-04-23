@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
   },
   tile: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     margin: theme.spacing(1),
     border: "1px solid #DCDCDC",
     backgroundColor: "#FFFDF0",
@@ -95,7 +95,7 @@ const Rack = (props) => {
   const [gameData, setGameData] = useState({});
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -169,7 +169,7 @@ const Rack = (props) => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
       <Grid
         id="header"
