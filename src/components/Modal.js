@@ -32,7 +32,7 @@ export const Modal = (props) => {
                   <Typography>
                     Player {index + 1}: {player}
                   </Typography>
-                  <Typography variant="body2" styles={{ fontSize: "0.7em" }}>
+                  <Typography variant="body2" styles={{ fontSize: "0.5em" }}>
                     {urls[index]}
                   </Typography>
                   <Button

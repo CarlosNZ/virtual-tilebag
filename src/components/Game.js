@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../img/vt_icon.png";
 import * as FirestoreDb from "../services/firebase";
-import { shuffleBag, drawFromBag, tilePointValues } from "../services/tilebag";
+import { shuffleBag, tilePointValues } from "../services/tilebag";
 import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
@@ -21,6 +21,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Snackbar,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -155,6 +156,13 @@ const Rack = (props) => {
     FirestoreDb.updateState(props.gameId, "tileBag", newTileBag);
   };
 
+  const swapTiles = () => {
+    console.log("Tilebag: ", gameData.tileBag.length, "Selected:", rackSelectedIndices);
+    if (gameData.tileBag.length < rackSelectedIndices.size) {
+      alert("Not enough tiles left in bag");
+    } else getNewTiles("swap");
+  };
+
   const toggleLetterSelected = (letterIndex) => {
     const tempSet = new Set(rackSelectedIndices);
     if (tempSet.has(letterIndex)) {
@@ -260,7 +268,7 @@ const Rack = (props) => {
                 : "Get new tiles from bag"}
             </Button>
           )}
-          <Button disabled={!canUpdate} onClick={() => getNewTiles("swap")}>
+          <Button disabled={!canUpdate} onClick={swapTiles}>
             Swap tiles
           </Button>
         </div>
@@ -301,6 +309,7 @@ const Rack = (props) => {
         </Card>
       </Grid>
       <Modal open={dialogOpen} handleClose={handleClose} players={players} gameId={props.gameId} />
+      {/* <Snackbar></Snackbar> */}
     </Container>
   );
 };
