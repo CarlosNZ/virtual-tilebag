@@ -192,7 +192,7 @@ const Rack = (props) => {
   };
 
   return (
-    <Container component="main" maxWidth="md">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <Grid
         id="header"
