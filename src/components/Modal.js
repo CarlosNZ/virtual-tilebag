@@ -38,33 +38,37 @@ export const Modal = (props) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Game instructions....</DialogTitle>
+      <DialogTitle>Game starting</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Share these links with other players so they can load their version of the game tiles.
+          Share these links with other players so they can load their version of the game.
         </DialogContentText>
-        {players.map((player, index) => {
-          return (
-            <>
-              <Typography>
-                Player {index + 1}: {player}
-              </Typography>
-              <Typography variant="body2" styles={{ fontSize: "0.7em" }}>
-                {urls[index]}
-              </Typography>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                onClick={() => {
-                  navigator.clipboard.writeText(urls[index]);
-                }}
-              >
-                Copy
-              </Button>
-            </>
-          );
-        })}
+        <List>
+          {players.map((player, index) => {
+            return (
+              <>
+                <ListItem style={{ flexDirection: "column", alignItems: "flex-start" }}>
+                  <Typography>
+                    Player {index + 1}: {player}
+                  </Typography>
+                  <Typography variant="body2" styles={{ fontSize: "0.7em" }}>
+                    {urls[index]}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      navigator.clipboard.writeText(urls[index]);
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </ListItem>
+              </>
+            );
+          })}
+        </List>
       </DialogContent>
     </Dialog>
   );
