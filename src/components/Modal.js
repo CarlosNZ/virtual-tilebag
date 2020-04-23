@@ -1,33 +1,14 @@
-import React, { useState, useEffect } from "react";
-import logo from "../img/vt_icon.png";
-import * as FirestoreDb from "../services/firebase";
-import { shuffleBag, drawFromBag, tilePointValues } from "../services/tilebag";
-import { makeStyles } from "@material-ui/core/styles";
-import PersonIcon from "@material-ui/icons/Person";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import React from "react";
 import {
   Button,
   Typography,
-  Grid,
-  Container,
-  CssBaseline,
-  Card,
-  CardContent,
-  CardActionArea,
-  Chip,
-  Divider,
   List,
   ListItem,
-  ListItemText,
-  ListItemIcon,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
 } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => {});
 
 export const Modal = (props) => {
   const { open, handleClose, players, gameId } = props;
@@ -38,7 +19,7 @@ export const Modal = (props) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Game starting</DialogTitle>
+      <DialogTitle align="center">Virtual Tilebag</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Share these links with other players so they can load their version of the game.
