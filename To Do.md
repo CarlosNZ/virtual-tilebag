@@ -1,13 +1,12 @@
 # High priority
 
-- Modal window for game start
-- Colour palette (theme)
-- Tile swapping (redo Tilebag handling)
-- Game launch process (hide button, big "Draw tiles" thing)
+- Home page/Info, FAQ etc.
 
 # Med priority
 
 - Home page/Info etc.
+- Don't allow to swap more than there are tiles in the bag.
+- Warning before swapping
 
 # Low priority
 

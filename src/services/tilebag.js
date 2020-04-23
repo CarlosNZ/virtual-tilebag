@@ -16,9 +16,10 @@ export const tilePointValues = {
   "_": 0,
 }
 
-export const shuffleBag = function (seed) {
+export const shuffleBag = function (seed, bag) {
+  if (bag === undefined) bag = Array.from(scrabbleEnglish);
   console.log("Shuffling the bag");
-  return shuffle(Array.from(scrabbleEnglish), seed);
+  return shuffle(bag, seed);
 };
 
 export const drawFromBag = function (tileBag, tilesRemaning, tilesRequested) {

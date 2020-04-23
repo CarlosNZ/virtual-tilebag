@@ -128,27 +128,29 @@ const Rack = (props) => {
     return rackArray;
   };
 
-  const getNewTiles = () => {
+  const getNewTiles = (swap) => {
+    console.log(swap);
+    const oldTiles = [];
     const selectedTilesIndices = gameData.currentPlayer === 0 ? [0, 1, 2, 3, 4, 5, 6] : Array.from(rackSelectedIndices);
-    const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
-    const newTileBag = gameData.tileBag.slice(selectedTilesIndices.length);
 
-    // const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, selectedTilesIndices.length);
-    const newTileCount = newTiles.length;
+    const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
+    let newTileBag = gameData.tileBag.slice(selectedTilesIndices.length);
     const newRack = rackStringToArray(racks[props.thisPlayer - 1]);
     // eslint-disable-next-line
     selectedTilesIndices.map(function (i) {
+      oldTiles.push(newRack[i]); // Keep old tile before it's swapped out
       newRack[i] = newTiles.pop();
     });
-
     const newRacks = [...racks];
     newRacks[props.thisPlayer - 1] = newRack.join("");
     FirestoreDb.updateState(props.gameId, "racks", newRacks);
     setRackSelectedIndices(new Set());
-    console.log("Current player: ", gameData.currentPlayer);
     const newPlayer =
       gameData.currentPlayer === 0 ? gameData.currentPlayer : (gameData.currentPlayer % players.length) + 1;
-    console.log("New player: ", newPlayer);
+    if (swap === "swap") {
+      newTileBag.push(...oldTiles);
+      newTileBag = shuffleBag(Math.random(), newTileBag);
+    }
     FirestoreDb.updateState(props.gameId, "currentPlayer", newPlayer);
     FirestoreDb.updateState(props.gameId, "tileBag", newTileBag);
   };
@@ -251,13 +253,16 @@ const Rack = (props) => {
               color="primary"
               fullWidth="false"
               style={{ marginBottom: 30 }}
-              onClick={getNewTiles}
+              onClick={() => getNewTiles("")}
             >
               {racks[props.thisPlayer - 1] === "" && gameData.currentPlayer === 0
                 ? "Get tiles from bag"
                 : "Get new tiles from bag"}
             </Button>
           )}
+          <Button disabled={!canUpdate} onClick={() => getNewTiles("swap")}>
+            Swap tiles
+          </Button>
         </div>
         <Chip
           label={(gameData.tileBag !== undefined ? gameData.tileBag.length : "") + " tiles left in bag"}
@@ -275,12 +280,11 @@ const Rack = (props) => {
                 <Typography variant="button" color="primary" style={{ fontSize: "1.2em" }}>
                   Players
                 </Typography>
-                {/* <ListItemText primary="Players" /> */}
               </ListItem>
               <Divider />
               {players.map((player, i) => {
                 return (
-                  <ListItem style={{ paddingLeft: 5 }}>
+                  <ListItem key={i} style={{ paddingLeft: 5 }}>
                     <ChevronRightIcon style={{ opacity: i === gameData.currentPlayer ? 1 : 0 }} />
                     <Typography
                       variant="body2"
