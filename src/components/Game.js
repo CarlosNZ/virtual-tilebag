@@ -102,7 +102,7 @@ const Rack = (props) => {
     const unsubscribe = FirestoreDb.syncGameState(props.gameId, (doc) => {
       setGameData({
         currentPlayer: parseInt(doc.data().currentPlayer),
-        tilesRemaining: parseInt(doc.data().tilesRemaining),
+        tileBag: doc.data().tileBag,
       });
       setPlayers(doc.data().players);
       setRacks(doc.data().racks);
@@ -130,7 +130,10 @@ const Rack = (props) => {
 
   const getNewTiles = () => {
     const selectedTilesIndices = gameData.currentPlayer === 0 ? [0, 1, 2, 3, 4, 5, 6] : Array.from(rackSelectedIndices);
-    const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, selectedTilesIndices.length);
+    const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
+    const newTileBag = gameData.tileBag.slice(selectedTilesIndices.length);
+
+    // const newTiles = drawFromBag(props.tileBag, gameData.tilesRemaining, selectedTilesIndices.length);
     const newTileCount = newTiles.length;
     const newRack = rackStringToArray(racks[props.thisPlayer - 1]);
     // eslint-disable-next-line
@@ -147,7 +150,7 @@ const Rack = (props) => {
       gameData.currentPlayer === 0 ? gameData.currentPlayer : (gameData.currentPlayer % players.length) + 1;
     console.log("New player: ", newPlayer);
     FirestoreDb.updateState(props.gameId, "currentPlayer", newPlayer);
-    FirestoreDb.updateState(props.gameId, "tilesRemaining", gameData.tilesRemaining - newTileCount);
+    FirestoreDb.updateState(props.gameId, "tileBag", newTileBag);
   };
 
   const toggleLetterSelected = (letterIndex) => {
@@ -257,7 +260,7 @@ const Rack = (props) => {
           )}
         </div>
         <Chip
-          label={gameData.tilesRemaining + " tiles left in bag"}
+          label={(gameData.tileBag !== undefined ? gameData.tileBag.length : "") + " tiles left in bag"}
           color="primary"
           style={{ marginBottom: 30 }}
           variant="outlined"

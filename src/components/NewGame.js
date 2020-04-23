@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../img/vt_icon.png";
+import { shuffleBag } from "../services/tilebag";
 import { makeStyles } from "@material-ui/core/styles";
 import * as FirestoreDb from "../services/firebase";
 import { useHistory } from "react-router-dom";
@@ -76,6 +77,7 @@ export const NewGame = () => {
         console.log(docRef.id);
         gameId = docRef.id;
       })
+      .then(() => FirestoreDb.updateState(gameId, "tileBag", shuffleBag(gameId)))
       .then(() => {
         history.push("/game/id-" + gameId + "/p1");
         //TO DO : Add error/fail option (.catch?)
