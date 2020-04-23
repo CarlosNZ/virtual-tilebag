@@ -6,6 +6,7 @@ import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import MuiAlert from "@material-ui/lab/Alert";
 import {
   Button,
   Typography,
@@ -97,6 +98,8 @@ const Rack = (props) => {
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [turnNotification, setTurnNotification] = useState(false);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -121,6 +124,10 @@ const Rack = (props) => {
     }
     // eslint-disable-next-line
   }, [racks]);
+
+  useEffect(() => {
+    setTurnNotification(gameData.currentPlayer === props.thisPlayer);
+  }, [gameData]);
 
   const rackStringToArray = (rackString) => {
     if (rackString === undefined) rackString = "";
@@ -159,7 +166,8 @@ const Rack = (props) => {
   const swapTiles = () => {
     console.log("Tilebag: ", gameData.tileBag.length, "Selected:", rackSelectedIndices);
     if (gameData.tileBag.length < rackSelectedIndices.size) {
-      alert("Not enough tiles left in bag");
+      setWarningOpen(true);
+      console.log("Should have been warned");
     } else getNewTiles("swap");
   };
 
@@ -179,6 +187,8 @@ const Rack = (props) => {
 
   const handleClose = () => {
     setDialogOpen(false);
+    setWarningOpen(false);
+    setTurnNotification(false);
   };
 
   return (
@@ -203,19 +213,16 @@ const Rack = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item>
-          <Chip
-            variant="outlined"
-            label={
-              gameStatus() === "waiting"
-                ? "Waiting to start..."
-                : gameStatus() === "myTurn"
-                ? "Your turn"
-                : players[gameData.currentPlayer - 1] + "'s turn"
-            }
-            className={classes.turnIndicator + " " + classes[gameStatus()]}
-          />
-        </Grid>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={10000}
+          open={turnNotification}
+          onClose={handleClose}
+        >
+          <MuiAlert onClose={handleClose} severity="success" variant="filled">
+            Your turn.
+          </MuiAlert>
+        </Snackbar>
       </Grid>
       <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
         {rackStringToArray(racks[props.thisPlayer - 1])
@@ -293,11 +300,11 @@ const Rack = (props) => {
               {players.map((player, i) => {
                 return (
                   <ListItem key={i} style={{ paddingLeft: 5 }}>
-                    <ChevronRightIcon style={{ opacity: i === gameData.currentPlayer ? 1 : 0 }} />
+                    <ChevronRightIcon style={{ opacity: i === gameData.currentPlayer - 1 ? 1 : 0 }} />
                     <Typography
                       variant="body2"
                       color="textSecondary"
-                      style={{ fontWeight: i === gameData.currentPlayer ? "bold" : "normal" }}
+                      style={{ fontWeight: i === gameData.currentPlayer - 1 ? "bold" : "normal" }}
                     >
                       Player {i + 1}: {player}
                     </Typography>
@@ -309,7 +316,16 @@ const Rack = (props) => {
         </Card>
       </Grid>
       <Modal open={dialogOpen} handleClose={handleClose} players={players} gameId={props.gameId} />
-      {/* <Snackbar></Snackbar> */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={5000}
+        open={warningOpen}
+        onClose={handleClose}
+      >
+        <MuiAlert onClose={handleClose} severity="warning" variant="filled">
+          Not enough tiles left in bag
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 };
