@@ -100,6 +100,8 @@ const Rack = (props) => {
   const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
   const [warningOpen, setWarningOpen] = useState(false);
   const [turnNotification, setTurnNotification] = useState(false);
+  const [newTileNotification, setNewTileNotification] = useState(false);
+  const [newTilesDrawn, setNewTilesDrawn] = useState([]);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -127,6 +129,7 @@ const Rack = (props) => {
 
   useEffect(() => {
     setTurnNotification(gameData.currentPlayer === props.thisPlayer);
+    // eslint-disable-next-line
   }, [gameData]);
 
   const rackStringToArray = (rackString) => {
@@ -137,11 +140,13 @@ const Rack = (props) => {
   };
 
   const getNewTiles = (swap) => {
-    console.log(swap);
     const oldTiles = [];
     const selectedTilesIndices = gameData.currentPlayer === 0 ? [0, 1, 2, 3, 4, 5, 6] : Array.from(rackSelectedIndices);
 
     const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
+    setNewTilesDrawn(newTiles);
+    console.log("New Tiles", newTiles, newTilesDrawn);
+    if (newTiles.length !== 0) setNewTileNotification(true);
     let newTileBag = gameData.tileBag.slice(selectedTilesIndices.length);
     const newRack = rackStringToArray(racks[props.thisPlayer - 1]);
     // eslint-disable-next-line
@@ -164,10 +169,8 @@ const Rack = (props) => {
   };
 
   const swapTiles = () => {
-    console.log("Tilebag: ", gameData.tileBag.length, "Selected:", rackSelectedIndices);
     if (gameData.tileBag.length < rackSelectedIndices.size) {
       setWarningOpen(true);
-      console.log("Should have been warned");
     } else getNewTiles("swap");
   };
 
@@ -189,6 +192,7 @@ const Rack = (props) => {
     setDialogOpen(false);
     setWarningOpen(false);
     setTurnNotification(false);
+    setNewTileNotification(false);
   };
 
   return (
@@ -215,7 +219,7 @@ const Rack = (props) => {
         </Grid>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          autoHideDuration={10000}
+          // autoHideDuration={10000}
           open={turnNotification}
           onClose={handleClose}
         >
@@ -326,6 +330,13 @@ const Rack = (props) => {
           Not enough tiles left in bag
         </MuiAlert>
       </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={newTileNotification}
+        autoHideDuration={10000}
+        onClose={handleClose}
+        message={"New Tiles: " + newTilesDrawn.toString()}
+      />
     </Container>
   );
 };
