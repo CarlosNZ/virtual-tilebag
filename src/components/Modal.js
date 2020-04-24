@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Typography,
-  List,
-  ListItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-} from "@material-ui/core";
+import { Button, Typography, List, ListItem, Dialog, DialogTitle, DialogContent, Divider } from "@material-ui/core";
 
 export const Modal = (props) => {
   const { open, handleClose, players, gameId } = props;
@@ -20,10 +11,11 @@ export const Modal = (props) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle align="center">Virtual Tilebag</DialogTitle>
+      <Divider variant="middle" />
       <DialogContent>
-        <DialogContentText>
+        <Typography color="textSecondary">
           Share these links with other players so they can load their version of the game.
-        </DialogContentText>
+        </Typography>
         <List>
           {players.map((player, index) => {
             return (
