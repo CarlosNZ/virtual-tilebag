@@ -92,11 +92,14 @@ export const Game = (props) => {
 const Rack = (props) => {
   const classes = useStyles();
   console.log("Rack re-render");
-  // State values
+  // Game State values
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
-  const [gameData, setGameData] = useState({});
+  const [gameData, setGameData] = useState({}); // current player & tile bag
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
+  const [history, setHistory] = useState([]);
+
+  // UI State values
   const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
   const [warningOpen, setWarningOpen] = useState(false);
   const [turnNotification, setTurnNotification] = useState(false);
