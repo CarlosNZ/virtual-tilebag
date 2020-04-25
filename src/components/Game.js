@@ -26,6 +26,7 @@ import {
   SnackbarContent,
   Menu,
   MenuItem,
+  Link,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -303,7 +304,15 @@ const Rack = (props) => {
           ) : (
             ""
           )}
-
+          <MenuItem
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            <Link href="/about" underline="none" target="_blank" color="inherit">
+              About
+            </Link>
+          </MenuItem>
           <MenuItem
             onClick={() => {
               setDialogOpen(true);

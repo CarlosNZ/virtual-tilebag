@@ -91,8 +91,16 @@ export const About = (props) => {
         <p>
           Player 1 starts. Once you&#39;ve played your move IRL, select the played tiles on the screen, re-draw (press
           the button), and populate your rack accordingly. The other players will need to place your move down on their
-          own boards so it&#39;ll help if you can see each other&#39;s games.
+          own boards so it&#39;ll help if you can see each other&#39;s games.{" "}
         </p>
+
+        <p>
+          And yes, you can <em>swap</em> tiles — you know, that thing you do occasionally when your game is going{" "}
+          <em>really</em> badly and you’d rather waste a turn trying to get better tiles than play the garbage you have
+          in your rack? The “Swap” button is hidden away in the “More Options” menu, since it’s not something you should
+          need very often. (It’ll only show up when it’s your turn and you’ve got some tiles selected.)
+        </p>
+
         <p>
           And that&#39;s about it. It should be fairly straightforward once you get going. Please{" "}
           <Link underline="always" className={classes.link} href="https://forms.gle/L8qCVg6z8isC4kYU6" target="_blank">
@@ -133,10 +141,10 @@ export const About = (props) => {
             </em>
           </b>
         </p>
-
         <p>
-          I know, right? Yes, this will be something I improve in the future. For now, just do your drawing before you
-          set your players in the virtual tilebag.
+          I know, right? Yes, this will be something I improve in the future. For now, what you can do is just get
+          players numbered lower than your preferred starting player to make a “dummy” move (i.e. click ‘New Tiles’ with
+          nothing selected) on their first move.
         </p>
         <p>
           <b>
