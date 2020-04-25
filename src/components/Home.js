@@ -51,7 +51,7 @@ export const Home = () => {
           >
             Start a new game.
           </Button>
-          <Link variant="body1" href="./About">
+          <Link variant="body1" href="./about">
             About, how to, FAQ, etc.
           </Link>
         </Paper>
