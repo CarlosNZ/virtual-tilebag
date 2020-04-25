@@ -34,7 +34,8 @@ export const About = (props) => {
           </Link>
           . This is simply an online tool for people who want to play a game of physical Scrabble, in real-time, with
           other humans, but, for whatever reason (such as a global pandemic) are physically isolated from each other.
-          Basically, it’s a shared, virtual tile bag. You provide the rest.
+          Basically, it’s a shared, virtual tile bag, which stays in sync via the magic of the Internet. You provide the
+          rest.
         </p>
         <h2>Why?</h2>
         <p>
@@ -91,7 +92,11 @@ export const About = (props) => {
         <p>
           Player 1 starts. Once you&#39;ve played your move IRL, select the played tiles on the screen, re-draw (press
           the button), and populate your rack accordingly. The other players will need to place your move down on their
-          own boards so it&#39;ll help if you can see each other&#39;s games.{" "}
+          own boards so it&#39;ll help if you can see each other&#39;s games.
+        </p>
+        <p>
+          The next player's interface will then update so they can play their turn, then the next player, et cetera
+          until the bag is empty.
         </p>
 
         <p>
