@@ -1,21 +1,22 @@
-/* .App {
-  text-align: center;
-} */
+#about-page h2 {
+  margin-bottom: 0px;
+  font-size: 1.3em;
+}
 
-/* #rack {
-  font-size: 200%;
-  display: flex;
-  justify-content: center;
-} */
+#about-page p {
+  margin-top: 5px;
+}
 
-/* .red {
-  color: red;
-} */
-
-/* .tile {
-  width: 35px;
-  height: 35px;
-  border: 1px solid;
-  border-radius: 3px;
-  margin: 4px;
-} */
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}

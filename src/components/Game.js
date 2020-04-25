@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import logo from "../img/vt_icon.png";
 import * as FirestoreDb from "../services/firebase";
-import { shuffleBag, tilePointValues } from "../services/tilebag";
+import { shuffleBag } from "../services/tilebag";
 import { Header } from "./Header";
 import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
@@ -99,7 +98,7 @@ const Rack = (props) => {
   const [gameData, setGameData] = useState({}); // current player & tile bag
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
-  const [history, setHistory] = useState([]);
+  // const [history, setHistory] = useState([]);
 
   // UI State values
   const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
@@ -189,8 +188,8 @@ const Rack = (props) => {
   const canUpdate =
     gameData.currentPlayer === props.thisPlayer || (gameData.currentPlayer === 0 && racks[props.thisPlayer - 1] === "");
 
-  const gameStatus = () =>
-    gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
+  // const gameStatus = () =>
+  //   gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
 
   const handleClose = () => {
     setDialogOpen(false);

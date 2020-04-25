@@ -1,26 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import logo from "../img/vt_icon.png";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Button,
-  Typography,
-  Grid,
-  Container,
-  CssBaseline,
-  Paper,
-  Card,
-  CardContent,
-  CardActionArea,
-  Chip,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Snackbar,
-  SnackbarContent,
-  Link,
-} from "@material-ui/core";
+import { Button, Typography, Grid, Container, CssBaseline, Paper, Link } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
     flexDirection: "column",
     alignItems: "center",
+    paddingBottom: 20,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -57,7 +39,7 @@ export const Home = () => {
             <Typography component="h1" variant="h3" align="center" gutterBottom>
               virtual tilebag
             </Typography>
-            <Typography>An online solution to real world Scrabble -- while in Lockdown.</Typography>
+            <Typography>An online solution to real world Scrabble — while in Lockdown.</Typography>
           </Grid>
           <Button
             variant="contained"
