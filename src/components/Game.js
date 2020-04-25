@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../img/vt_icon.png";
 import * as FirestoreDb from "../services/firebase";
 import { shuffleBag, tilePointValues } from "../services/tilebag";
+import { Header } from "./Header";
 import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
@@ -201,36 +202,17 @@ const Rack = (props) => {
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
-      <Grid
-        id="header"
-        container
-        xs={12}
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-        className={classes.header}
+      <Header />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        // autoHideDuration={10000}
+        open={turnNotification}
+        onClose={handleClose}
       >
-        <Grid container direction="row" xs={6} alignItems="center">
-          <Grid item>
-            <img style={{ width: 30, marginRight: 10 }} src={logo} alt="main-icon" />
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" color="primary" gutterBottom="true">
-              virtual tilebag
-            </Typography>
-          </Grid>
-        </Grid>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          // autoHideDuration={10000}
-          open={turnNotification}
-          onClose={handleClose}
-        >
-          <MuiAlert onClose={handleClose} severity="success" variant="filled">
-            Your turn.
-          </MuiAlert>
-        </Snackbar>
-      </Grid>
+        <MuiAlert onClose={handleClose} severity="success" variant="filled">
+          Your turn.
+        </MuiAlert>
+      </Snackbar>
       <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
         {rackStringToArray(racks[props.thisPlayer - 1])
           .filter((letter) => letter !== "") // Don't show "empty" tiles

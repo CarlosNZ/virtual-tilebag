@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import { NewGame } from "./components/NewGame";
+import { Home } from "./components/Home";
 import { Game } from "./components/Game";
 import { Typography, Link, ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -27,10 +28,6 @@ function App() {
       </ThemeProvider>
     </section>
   );
-}
-
-function Home() {
-  return <NewGame />;
 }
 
 function Footer() {
