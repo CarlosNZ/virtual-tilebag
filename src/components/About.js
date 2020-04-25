@@ -94,8 +94,11 @@ export const About = (props) => {
           own boards so it&#39;ll help if you can see each other&#39;s games.
         </p>
         <p>
-          And that&#39;s about it. It should be fairly straightforward once you get going. Please send any feedback my
-          way and I&#39;ll try to keep improving it.
+          And that&#39;s about it. It should be fairly straightforward once you get going. Please{" "}
+          <Link underline="always" className={classes.link} href="https://forms.gle/L8qCVg6z8isC4kYU6" target="_blank">
+            send any feedback my way
+          </Link>{" "}
+          and I&#39;ll try to keep improving it.
         </p>
         <h2> FAQ</h2>
         <p>

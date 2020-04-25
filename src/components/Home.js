@@ -48,7 +48,6 @@ export const Home = () => {
             className={classes.submit}
             value="Create game"
             href="./new-game"
-            // onClick={initGame}
           >
             Start a new game.
           </Button>

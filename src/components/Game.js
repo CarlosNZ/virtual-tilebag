@@ -24,6 +24,8 @@ import {
   ListItemIcon,
   Snackbar,
   SnackbarContent,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -105,6 +107,7 @@ const Rack = (props) => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [turnNotification, setTurnNotification] = useState(false);
   const [newTileNotification, setNewTileNotification] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(false);
   const [newTilesDrawn, setNewTilesDrawn] = useState([1, 2, 3]);
 
   // Listener for changes to database -> update local state
@@ -172,6 +175,7 @@ const Rack = (props) => {
   };
 
   const swapTiles = () => {
+    handleClose();
     if (gameData.tileBag.length < rackSelectedIndices.size) {
       setWarningOpen(true);
     } else getNewTiles("swap");
@@ -196,6 +200,11 @@ const Rack = (props) => {
     setWarningOpen(false);
     setTurnNotification(false);
     setNewTileNotification(false);
+    setAnchorEl(null);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -278,16 +287,39 @@ const Rack = (props) => {
               </Button>
             </>
           )}
-          <Button disabled={!canUpdate} onClick={swapTiles}>
-            Swap tiles
-          </Button>
         </div>
         <Chip
           label={(gameData.tileBag !== undefined ? gameData.tileBag.length : "") + " tiles left in bag"}
           color="primary"
-          style={{ marginBottom: 30 }}
+          style={{ marginBottom: 10 }}
           variant="outlined"
         />
+        <Button color="textSecondary" onClick={handleMenuClick} style={{ marginBottom: 20 }}>
+          More Options
+        </Button>
+        <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+          {gameData.currentPlayer === props.thisPlayer && rackSelectedIndices.size !== 0 ? (
+            <MenuItem onClick={swapTiles}>Swap Tiles</MenuItem>
+          ) : (
+            ""
+          )}
+
+          <MenuItem
+            onClick={() => {
+              setDialogOpen(true);
+            }}
+          >
+            Share Player Links
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              window.open("https://forms.gle/L8qCVg6z8isC4kYU6");
+              handleClose();
+            }}
+          >
+            Feedback
+          </MenuItem>
+        </Menu>
         <Card id="player-box">
           <CardContent style={{ padding: 0 }}>
             <List>

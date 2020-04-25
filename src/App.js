@@ -34,12 +34,15 @@ function App() {
 
 function Footer() {
   return (
-    <footer style={{ marginTop: 30 }}>
+    <footer style={{ marginTop: 30, marginBottom: 30 }}>
       <Typography variant="caption" display="block" color="textSecondary" align="center" style={{ fontSize: "0.8em" }}>
         Copyright © Carl Smith {new Date().getFullYear()} &#8226;{" "}
         {/* <Link color="inherit" href="https://github.com/CarlosNZ/virtual-tilebag" target="_blank">
           Github
         </Link> */}
+        <Link color="inherit" href="https://forms.gle/L8qCVg6z8isC4kYU6" target="_blank">
+          Feedback
+        </Link>
       </Typography>
     </footer>
   );
