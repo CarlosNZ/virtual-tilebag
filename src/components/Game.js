@@ -251,18 +251,33 @@ const Rack = (props) => {
               <Divider style={{ marginBottom: 20 }} />
             </Grid>
           ) : (
-            <Button
-              variant="contained"
-              disabled={!canUpdate}
-              color="primary"
-              fullWidth="false"
-              style={{ marginBottom: 30 }}
-              onClick={() => getNewTiles("")}
-            >
-              {racks[props.thisPlayer - 1] === "" && gameData.currentPlayer === 0
-                ? "Get tiles from bag"
-                : "Get new tiles from bag"}
-            </Button>
+            <>
+              <Typography
+                align="center"
+                variant="body2"
+                color="textSecondary"
+                gutterBottom
+                style={
+                  gameData.currentPlayer === props.thisPlayer && rackSelectedIndices.size === 0
+                    ? {}
+                    : { visibility: "hidden" }
+                }
+              >
+                Select the tiles that you played
+              </Typography>
+              <Button
+                variant="contained"
+                disabled={!canUpdate}
+                color="primary"
+                fullWidth="false"
+                style={{ marginBottom: 30 }}
+                onClick={() => getNewTiles("")}
+              >
+                {racks[props.thisPlayer - 1] === "" && gameData.currentPlayer === 0
+                  ? "Get tiles from bag"
+                  : "Get new tiles"}
+              </Button>
+            </>
           )}
           <Button disabled={!canUpdate} onClick={swapTiles}>
             Swap tiles
