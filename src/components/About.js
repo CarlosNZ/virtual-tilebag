@@ -2,7 +2,7 @@ import React from "react";
 import { Header } from "./Header";
 import button_img from "../img/get_tiles_button.png";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Container, CssBaseline, Paper, Divider, Link } from "@material-ui/core";
+import { Typography, Container, CssBaseline, Paper, Divider, Link, Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -83,10 +83,10 @@ export const About = (props) => {
           </Link>
           , enter in your player info and off you go. You&#39;ll be given a unique link to share with each player.{" "}
         </p>
-        <p>Once you’re in, draw your starting tiles with the big, honking button:</p>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img src={button_img} alt="Tiles button" style={{ width: 292 }} />
-        </div>
+        <p>
+          Once you’re in, draw your starting tiles with the big, honking button:{" "}
+          <img src={button_img} alt="Tiles button" style={{ width: 200, verticalAlign: "middle" }} />
+        </p>
         <p>Then load your physical tile rack to match the virtual one on your screen. </p>
         <p>
           Player 1 starts. Once you&#39;ve played your move IRL, select the played tiles on the screen, re-draw (press
@@ -108,6 +108,15 @@ export const About = (props) => {
           </Link>{" "}
           and I&#39;ll try to keep improving it.
         </p>
+
+        <div style={{ display: "flex", justifyContent: "center", padding: 30 }}>
+          <Button variant="contained" color="primary" style={{ textAlign: "center" }}>
+            <Link href="/new-game" color="inherit" underline="none">
+              Play Now
+            </Link>
+          </Button>
+        </div>
+
         <h2> FAQ</h2>
         <p>
           <b>
