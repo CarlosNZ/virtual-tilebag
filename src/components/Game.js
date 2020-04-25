@@ -23,6 +23,7 @@ import {
   ListItemText,
   ListItemIcon,
   Snackbar,
+  SnackbarContent,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -104,7 +105,7 @@ const Rack = (props) => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [turnNotification, setTurnNotification] = useState(false);
   const [newTileNotification, setNewTileNotification] = useState(false);
-  const [newTilesDrawn, setNewTilesDrawn] = useState([]);
+  const [newTilesDrawn, setNewTilesDrawn] = useState([1, 2, 3]);
 
   // Listener for changes to database -> update local state
   useEffect(() => {
@@ -147,8 +148,7 @@ const Rack = (props) => {
     const selectedTilesIndices = gameData.currentPlayer === 0 ? [0, 1, 2, 3, 4, 5, 6] : Array.from(rackSelectedIndices);
 
     const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
-    setNewTilesDrawn(newTiles);
-    console.log("New Tiles", newTiles, newTilesDrawn);
+    setNewTilesDrawn([...newTiles]);
     if (newTiles.length !== 0) setNewTileNotification(true);
     let newTileBag = gameData.tileBag.slice(selectedTilesIndices.length);
     const newRack = rackStringToArray(racks[props.thisPlayer - 1]);
@@ -338,8 +338,12 @@ const Rack = (props) => {
         open={newTileNotification}
         autoHideDuration={10000}
         onClose={handleClose}
-        message={"New Tiles: " + newTilesDrawn.toString()}
-      />
+      >
+        <SnackbarContent
+          message={"Your new tiles:  " + newTilesDrawn.join(", ")}
+          style={{ justifyContent: "center" }}
+        />
+      </Snackbar>
     </Container>
   );
 };
