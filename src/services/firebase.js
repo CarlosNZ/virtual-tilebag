@@ -21,7 +21,6 @@ export const createGame = (players) => {
     currentPlayer: 0,
     players: players,
     racks: players.map((p) => ""),
-    // tilesRemaining: 100,
     tileBag: [],
     history: [],
   });
