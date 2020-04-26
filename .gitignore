@@ -27,4 +27,3 @@ node_modules
 firebase.json
 firebase-debug.log
 .env
-public/init-firebase.js
