@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme) => ({
 export const About = (props) => {
   const classes = useStyles();
 
+  document.title = "Virtual Tilebag - About";
+
   return (
     <Container component="main" style={{ maxWidth: 848 }}>
       <CssBaseline />

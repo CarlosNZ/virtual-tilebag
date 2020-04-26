@@ -78,13 +78,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Game = (props) => {
-  // const classes = useStyles();
   console.log("Game Re-render");
 
   // Game constants
   const gameId = props.match.params.gameID;
   const thisPlayer = parseInt(props.match.params.player);
   const tileBag = shuffleBag(gameId);
+
+  document.title = "Virtual Tilebag - Game " + gameId;
 
   return (
     <div>

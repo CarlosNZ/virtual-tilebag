@@ -55,6 +55,7 @@ const PlayerNameInput = (props) => {
 };
 
 export const NewGame = () => {
+  document.title = "Virtual Tilebag - New Game";
   const [playerNum, setPlayerNum] = useState(2);
   const playerNames = useState(["", "", "", ""]);
   let history = useHistory();
