@@ -108,7 +108,7 @@ const Rack = (props) => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [turnNotification, setTurnNotification] = useState(false);
   const [newTileNotification, setNewTileNotification] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [newTilesDrawn, setNewTilesDrawn] = useState([1, 2, 3]);
 
   // Listener for changes to database -> update local state
@@ -222,7 +222,7 @@ const Rack = (props) => {
           Your turn.
         </MuiAlert>
       </Snackbar>
-      <Grid id="rack" container xs={12} justify="center" className={classes.rack}>
+      <Grid id="rack" container justify="center" className={classes.rack}>
         {rackStringToArray(racks[props.thisPlayer - 1])
           .filter((letter) => letter !== "") // Don't show "empty" tiles
           .map((letter, index) => {
@@ -278,7 +278,7 @@ const Rack = (props) => {
                 variant="contained"
                 disabled={!canUpdate}
                 color="primary"
-                fullWidth="false"
+                fullWidth
                 style={{ marginBottom: 30 }}
                 onClick={() => getNewTiles("")}
               >
@@ -295,7 +295,7 @@ const Rack = (props) => {
           style={{ marginBottom: 10 }}
           variant="outlined"
         />
-        <Button color="textSecondary" onClick={handleMenuClick} style={{ marginBottom: 20 }}>
+        <Button onClick={handleMenuClick} style={{ marginBottom: 20 }}>
           More Options
         </Button>
         <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

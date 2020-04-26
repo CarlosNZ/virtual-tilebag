@@ -23,23 +23,15 @@ export const Header = () => {
   const classes = useStyles();
 
   return (
-    <Grid
-      id="header"
-      container
-      xs={12}
-      direction="row"
-      justify="space-between"
-      alignItems="center"
-      className={classes.header}
-    >
-      <Grid container direction="row" xs={6} alignItems="center">
+    <Grid id="header" container direction="row" justify="space-between" alignItems="center" className={classes.header}>
+      <Grid container direction="row" alignItems="center">
         <Grid item>
           <Link href="/">
             <img style={{ width: 30, marginRight: 10 }} src={logo} alt="main-icon" />
           </Link>
         </Grid>
         <Grid item>
-          <Typography variant="h6" color="primary" gutterBottom="true">
+          <Typography variant="h6" color="primary" gutterBottom>
             <Link href="/" underline="none">
               virtual tilebag
             </Link>
