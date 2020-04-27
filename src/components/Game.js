@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as FirestoreDb from "../services/firebase";
-import { shuffleBag } from "../services/tilebag";
+import { shuffleBag, tilePointValues } from "../services/tilebag";
 import { Header } from "./Header";
 import { Modal } from "./Modal";
 import { makeStyles } from "@material-ui/core/styles";
@@ -74,6 +74,12 @@ const useStyles = makeStyles((theme) => ({
   selectedTile: {
     transform: "translateY(-15px)",
     opacity: 0.7,
+  },
+  tilePoints: {
+    position: "absolute",
+    right: 3,
+    bottom: -6,
+    fontSize: 11,
   },
 }));
 
@@ -400,9 +406,9 @@ const Tile = (props) => {
             {props.letter}
           </Typography>
         </CardContent>
-        {/* <Typography variant="body2" style={{ fontSize: "1rem" }}>
+        <Typography variant="body2" className={classes.tilePoints}>
           {tilePointValues[props.letter]}
-        </Typography> */}
+        </Typography>
       </CardActionArea>
     </Card>
   );
