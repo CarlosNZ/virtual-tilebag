@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as FirestoreDb from "../services/firebase";
 import { shuffleBag, tilePointValues } from "../services/tilebag";
 import { Header } from "./Header";
-import { Modal } from "./Modal";
+import { ShareDialog } from "./PlayerShareDialog";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -102,13 +102,13 @@ export const Game = (props) => {
 
 const Rack = (props) => {
   const classes = useStyles();
-  console.log("Rack re-render");
+
   // Game State values
   const [rackSelectedIndices, setRackSelectedIndices] = useState(new Set());
   const [gameData, setGameData] = useState({}); // current player & tile bag
   const [players, setPlayers] = useState([]);
   const [racks, setRacks] = useState([]);
-  // const [history, setHistory] = useState([]);
+  // const [history, setHistory] = useState([]); // TO-DO
 
   // UI State values
   const [dialogOpen, setDialogOpen] = useState(props.thisPlayer === 1);
@@ -157,7 +157,6 @@ const Rack = (props) => {
   const getNewTiles = (swap) => {
     const oldTiles = [];
     const selectedTilesIndices = gameData.currentPlayer === 0 ? [0, 1, 2, 3, 4, 5, 6] : Array.from(rackSelectedIndices);
-
     const newTiles = gameData.tileBag.slice(0, selectedTilesIndices.length);
     setNewTilesDrawn([...newTiles]);
     if (newTiles.length !== 0) setNewTileNotification(true);
@@ -200,9 +199,6 @@ const Rack = (props) => {
   const canUpdate =
     gameData.currentPlayer === props.thisPlayer || (gameData.currentPlayer === 0 && racks[props.thisPlayer - 1] === "");
 
-  // const gameStatus = () =>
-  //   gameData.currentPlayer === 0 ? "waiting" : gameData.currentPlayer === props.thisPlayer ? "myTurn" : "othersTurn";
-
   const handleClose = () => {
     setDialogOpen(false);
     setWarningOpen(false);
@@ -219,12 +215,7 @@ const Rack = (props) => {
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <Header />
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        // autoHideDuration={10000}
-        open={turnNotification}
-        onClose={handleClose}
-      >
+      <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }} open={turnNotification} onClose={handleClose}>
         <MuiAlert onClose={handleClose} severity="success" variant="filled">
           Your turn.
         </MuiAlert>
@@ -366,7 +357,7 @@ const Rack = (props) => {
           </CardContent>
         </Card>
       </Grid>
-      <Modal open={dialogOpen} handleClose={handleClose} players={players} gameId={props.gameId} />
+      <ShareDialog open={dialogOpen} handleClose={handleClose} players={players} gameId={props.gameId} />
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         autoHideDuration={5000}

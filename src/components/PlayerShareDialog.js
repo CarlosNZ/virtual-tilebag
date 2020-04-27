@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Typography, List, ListItem, Dialog, DialogTitle, DialogContent, Divider } from "@material-ui/core";
 
-export const Modal = (props) => {
+export const ShareDialog = (props) => {
   const { open, handleClose, players, gameId } = props;
 
   const urls = players.map((player, index) => {
