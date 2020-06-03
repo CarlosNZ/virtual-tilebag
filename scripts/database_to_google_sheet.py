@@ -51,3 +51,4 @@ worksheet.update('A1:E1', [["Game started", "GameID",
 worksheet.update('A2:E'+str(len(output)+1), output)
 
 print("Done!")
+print("{} games. Last entry: {}".format(len(output), output.pop()[0]))
