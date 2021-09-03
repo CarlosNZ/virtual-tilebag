@@ -40,7 +40,7 @@
     ]
   },
   "devDependencies": {
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "date-and-time": ">=0.14.2"
   }
 }
